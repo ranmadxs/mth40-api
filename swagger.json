@@ -1,0 +1,81 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "WH40K API",
+    "contact": {
+      "email": "grineldosanchez@yahoo.es",
+      "name": "Admin",
+      "url": "http://relatosdelaherejia.cl"
+    },
+    "description": "Api de servicio WH40K. Para torneos OT500"
+  },
+  "tags": [
+    {
+      "name": "army-factions",
+      "description": "Servicios relacionadosa las facciones de WH40K, por ejemplo, Space Wolfs, Dark Angels, etc."
+    },
+    {
+      "name": "developers",
+      "description": "Operations available to regular developers"
+    }
+  ],
+  "paths": {
+    "/armies/list": {
+      "get": {
+        "tags": [
+          "army-factions"
+        ],
+        "summary": "Lista de Conferencias de Ejércitos",
+        "operationId": "armiesList",
+        "description": "Obtiene la lista de las conferencias de los Ejércitos de WH40K, por ejemplo, Imperium, Chaos, Xenos.\n",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado de la lista de conferencias",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Army"
+              }
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Army": {
+      "type": "object",
+      "required": [
+        "ID",
+        "NAME",
+        "CODE"
+      ],
+      "properties": {
+        "ID": {
+          "type": "integer",
+          "example": 1
+        },
+        "NAME": {
+          "type": "string",
+          "example": "Xenos"
+        },
+        "CODE": {
+          "type": "string",
+          "example": "XEN"
+        }
+      }
+    }
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/ranmadxs/wh40-api/1.0.0",
+  "schemes": [
+    "https"
+  ]
+}

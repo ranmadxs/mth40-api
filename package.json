@@ -1,0 +1,31 @@
+{
+    "name": "wh40-api",
+    "version": "1.0.0",
+    "description": "API Universo WH40K",
+    "keywords": [
+        "node.js",
+        "express.js",
+        "swagger"
+    ],
+    "main": "index.js",
+    "scripts": {
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ranmadxs/mth40-api.git"
+    },
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "express": "^4.16.4",
+        "method-override": "^3.0.0",
+        "mysql": "^2.17.1",
+        "swagger-ui-express": "2.0.6"
+    },
+    "author": "Edgar Sánchez",
+    "license": "ISC",
+    "engines": {
+        "node": ">=8.16.0"
+    }
+}
