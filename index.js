@@ -18,6 +18,7 @@ app.get('/', (req, res) =>
 );
 
 app.get('/armies/list/', function (req, res) {
+    console.debug(req.route, '/armies/list/');
     res.writeHead(200, {'Content-Type': 'application/json'});
     var response = "{resp:'XD'}";
     res.end(JSON.stringify(response));

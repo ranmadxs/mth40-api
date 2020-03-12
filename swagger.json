@@ -73,9 +73,8 @@
       }
     }
   },
-  "host": "virtserver.swaggerhub.com",
-  "basePath": "/ranmadxs/wh40-api/1.0.0",
+  "basePath": "/",
   "schemes": [
-    "https"
+    "http", "https"
   ]
 }
