@@ -3,6 +3,9 @@ const app = express();
 var cors = require('cors');
 var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./swagger.json');
+const ArmyFactions =  require('./src/svc/armyFactions');
+
+//let armyFactions = new ArmyFactions();
 
 app.use(
         cors({
@@ -20,6 +23,7 @@ app.get('/', (req, res) =>
 app.get('/armies/list/', function (req, res) {
     console.debug(req.route, '/armies/list/');
     res.writeHead(200, {'Content-Type': 'application/json'});
+    ArmyFactions.getListArmyFactions();
     var response = "{resp:'XD'}";
     res.end(JSON.stringify(response));
 });
