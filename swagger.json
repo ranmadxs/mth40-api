@@ -12,29 +12,56 @@
   },
   "tags": [
     {
-      "name": "army-factions",
-      "description": "Servicios relacionadosa las facciones de WH40K, por ejemplo, Space Wolfs, Dark Angels, etc."
+      "name": "challonge-tournaments",
+      "description": "Servicios de challonge API para torneos"
     },
     {
-      "name": "developers",
-      "description": "Operations available to regular developers"
+      "name": "army-api",
+      "description": "Army, Factions, SubFactions API"
     }
   ],
   "paths": {
-    "/armies/list": {
+    "/challonge/tournaments": {
       "get": {
         "tags": [
-          "army-factions"
+          "challonge-tournaments"
         ],
-        "summary": "Lista de Conferencias de Ejércitos",
-        "operationId": "armiesList",
-        "description": "Obtiene la lista de las conferencias de los Ejércitos de WH40K, por ejemplo, Imperium, Chaos, Xenos.\n",
+        "summary": "Lista de Torneos",
+        "operationId": "listTournaments",
+        "description": "Obtiene la lista de Torneos en Challonge.\n",
         "produces": [
           "application/json"
         ],
         "responses": {
           "200": {
-            "description": "Resultado de la lista de conferencias",
+            "description": "Resultado de la lista de tournaments[]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tournament"
+              }
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },
+    "/army/list": {
+      "get": {
+        "tags": [
+          "army-api"
+        ],
+        "summary": "Lista de Armadas",
+        "operationId": "listArmy",
+        "description": "Obtiene la lista de Armadas en MTH40k DB.\n",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado de la lista de Army[]",
             "schema": {
               "type": "array",
               "items": {
@@ -47,7 +74,7 @@
           }
         }
       }
-    }
+    }    
   },
   "definitions": {
     "Army": {
@@ -69,6 +96,41 @@
         "CODE": {
           "type": "string",
           "example": "XEN"
+        }
+      }
+    }, 
+    "tournament": {
+      "type": "object",
+      "properties": {
+        "id": {
+            "type": "integer",
+            "example": 7968393
+        },
+        "name": {
+            "type": "string",
+            "example": "[ELI] Adeptus Astartes {OT500-V01}"
+        },
+        "url": {
+            "type": "string"
+        },
+        "tournament_type": {
+            "type": "string"
+        },
+        "game_name": {
+            "type": "string"
+        },
+        "state": {
+            "type": "string"
+        },
+        "event_id": {
+            "type": "integer",
+            "example": 27010
+        },
+        "started_at": {
+            "type": "string"
+        },
+        "completed_at": {
+            "type": "string"
         }
       }
     }
