@@ -12,6 +12,10 @@
   },
   "tags": [
     {
+    "name" : "roster-api",
+    "description" : "All Roster Battlescribe Services"
+    },
+    {
       "name": "challonge-tournaments",
       "description": "Servicios de challonge API para torneos"
     },
@@ -21,6 +25,38 @@
     }
   ],
   "paths": {
+     "/roster/validateRoster" : {
+      "post" : {
+        "tags" : [ "roster-api" ],
+        "summary" : "Validate Roster",
+        "description" : "Valida el Roster de Battlescribe contra Challonge, wahapedia.ru",
+        "operationId" : "validateRoster",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "json_roster",
+          "in" : "formData",
+          "description" : "Json Roster here.",
+          "required" : false,
+          "type" : "string",
+          "default" : "{status:'VALIDATE', name:'Astra Millitarum-OT500-Primaris Psyker'}"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Resultado de la lista de tournaments[]",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Roster"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Mala petición"
+          }
+        }
+      }
+    },
     "/challonge/tournaments": {
       "get": {
         "tags": [
@@ -74,60 +110,63 @@
           }
         }
       }
-    }    
+    }
   },
-  "definitions": {
-    "Army": {
-      "type": "object",
-      "required": [
-        "ID",
-        "NAME",
-        "CODE"
-      ],
-      "properties": {
-        "ID": {
-          "type": "integer",
-          "example": 1
-        },
-        "NAME": {
-          "type": "string",
-          "example": "Xenos"
-        },
-        "CODE": {
-          "type": "string",
-          "example": "XEN"
+  "definitions" : {
+    "Roster" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
         }
       }
-    }, 
-    "tournament": {
-      "type": "object",
-      "properties": {
-        "id": {
-            "type": "integer",
-            "example": 7968393
+    },
+    "Army" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
         },
-        "name": {
-            "type": "string",
-            "example": "[ELI] Adeptus Astartes {OT500-V01}"
+        "name" : {
+          "type" : "string",
+          "example" : "Xenos"
         },
-        "url": {
-            "type": "string"
+        "code" : {
+          "type" : "string",
+          "example" : "XEN"
+        }
+      }
+    },
+    "tournament" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 7968393
         },
-        "tournament_type": {
-            "type": "string"
+        "name" : {
+          "type" : "string",
+          "example" : "[ELI] Adeptus Astartes {OT500-V01}"
         },
-        "game_name": {
-            "type": "string"
+        "url" : {
+          "type" : "string"
         },
-        "state": {
-            "type": "string"
+        "tournament_type" : {
+          "type" : "string"
         },
-        "event_id": {
-            "type": "integer",
-            "example": 27010
+        "game_name" : {
+          "type" : "string"
         },
-        "started_at": {
-            "type": "string"
+        "state" : {
+          "type" : "string"
+        },
+        "event_id" : {
+          "type" : "integer",
+          "example" : 27010
+        },
+        "started_at" : {
+          "type" : "string"
         },
         "completed_at": {
             "type": "string"

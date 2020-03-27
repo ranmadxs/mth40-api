@@ -1,17 +1,28 @@
+var conFactory = require('./ConnectionFactory')
+var logger = require('../../LogConfig');
 
 class ArmySvc {
     constructor() {
         if(! ArmySvc.instance) {
-            this.ID = null;
-            this.NAME = null;
-            this.CODE = null;
             ArmySvc.instance = this;
         }
         return ArmySvc.instance;     
     }
 
     listArmy () {
-        return {'XD': true};
+        return new Promise(function (resolve, reject) {
+            conFactory.getConnection().query("SELECT * FROM `ARMY`", function (err, result, fields) {
+                if (err) throw err;
+                resolve(result.map(({
+                    ID, NAME, CODE
+                  }) => ({
+                    id : ID,
+                    name: NAME,
+                    code: CODE
+                })));
+                //logger.debug(fields);
+            });            
+        });
     }
 };
 
