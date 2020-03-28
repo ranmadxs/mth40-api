@@ -31,16 +31,25 @@
         "summary" : "Validate Roster",
         "description" : "Valida el Roster de Battlescribe contra Challonge, wahapedia.ru",
         "operationId" : "validateRoster",
-        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "consumes" : [ "multipart/form-data" ],
         "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "json_roster",
+        "parameters" : [ 
+          {
+          "name" : "roster_json",
           "in" : "formData",
           "description" : "Json Roster here.",
-          "required" : false,
+          "required" : true,
           "type" : "string",
           "default" : "{status:'VALIDATE', name:'Astra Millitarum-OT500-Primaris Psyker'}"
-        } ],
+          }, 
+          {
+            "name" : "roster_file",
+            "in" : "formData",
+            "description" : "File Roster here. (ros extension xml)",
+            "required" : true,
+            "type" : "file"          
+            }
+          ],
         "responses" : {
           "200" : {
             "description" : "Resultado de la lista de tournaments[]",
