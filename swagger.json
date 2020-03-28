@@ -183,8 +183,5 @@
       }
     }
   },
-  "basePath": "/",
-  "schemes": [
-    "http", "https"
-  ]
+  "basePath": "/"
 }
