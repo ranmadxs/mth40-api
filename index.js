@@ -1,6 +1,5 @@
+require('dotenv').config();
 const express = require('express');
-const formData = require("express-form-data");
-const os = require("os");
 const app = express();
 var logger = require('./LogConfig');
 var cors = require('cors');
@@ -9,12 +8,15 @@ var swaggerDocument = require('./swagger.json');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
-
+var redisFactory = require('./src/factories/RedisFactory');
+var mth40 = require ('./src/configs');
 const challongeSvc =  require('./src/svc/ChallongeSvc');
 var armyController = require('./src/controller/ArmyController');
 var rosterController = require('./src/controller/RosterController');
 
 const factionSvc = require('./src/svc/FactionSvc');
+
+logger.debug (mth40);
 
 // for parsing application/json
 app.use(bodyParser.json()); 
@@ -59,9 +61,9 @@ app.get('/army/list/', function (req, res) {
 */
 
 app.get('/challonge/tournaments/', function (req, res) {
-    console.debug(req.route, '/challonge/tournaments/');
+    //console.debug(req.route, '/challonge/tournaments/');
     res.writeHead(200, {'Content-Type': 'application/json'});
-    var promisedResult = challongeSvc.listTournaments();
+    var promisedResult = challongeSvc.tournaments();
 
     promisedResult.then(function (result) {
         logger.info(result);
@@ -69,8 +71,8 @@ app.get('/challonge/tournaments/', function (req, res) {
     });    
 });
 
-app.listen(process.env.PORT || 3000, function () {
-    logger.info('server running on port 3000', 'app.listen');
+app.listen(mth40.config.API_PORT, function () {
+    logger.info('server running on port ' + mth40.config.API_PORT, 'app.listen');
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

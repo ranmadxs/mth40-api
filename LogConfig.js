@@ -6,7 +6,7 @@ log4js_extend(log4js, {
   });
 
 const logger = log4js.getLogger(">");
-logger.level = 'debug';
+logger.level = process.env.LOGGER_LEVEL || 'debug';
 
 logger.info("Init Logger level = [" + logger.level + "]");
 module.exports = logger;

@@ -1,4 +1,4 @@
-var conFactory = require('./ConnectionFactory')
+var conFactory = require('../factories/ConnectionFactory')
 
 class FactionSvc {
     constructor() {

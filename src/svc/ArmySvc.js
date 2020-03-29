@@ -1,4 +1,4 @@
-var conFactory = require('./ConnectionFactory')
+var conFactory = require('../factories/ConnectionFactory');
 var logger = require('../../LogConfig');
 
 class ArmySvc {

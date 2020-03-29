@@ -3,10 +3,14 @@ var logger = require('../../LogConfig');
 
 class ConnectionFactory {
     constructor(){
-        var host = this.host = "u0zbt18wwjva9e0v.cbetxkdyhwsb.us-east-1.rds.amazonaws.com";
-        this.user = "fgwr0eqvwtaijamb";
-        this.password = "tsp0gaybdzyuaeuv";
-        this.database = "m7vety412v628e4l";
+        //var host = this.host = "u0zbt18wwjva9e0v.cbetxkdyhwsb.us-east-1.rds.amazonaws.com";
+        var host = this.host = "relatosdelaherejia.cl";
+        this.user = "relatosd_wh40k";
+        this.password = "Nueva123.";
+        this.database = "relatosd_wh40k";
+        //this.user = "fgwr0eqvwtaijamb";
+        //this.password = "tsp0gaybdzyuaeuv";
+        //this.database = "m7vety412v628e4l";
         this.con = mysql.createConnection({
             host: this.host,
             user: this.user,
@@ -15,7 +19,7 @@ class ConnectionFactory {
         });
         this.con.connect(function(err) {
             if (err) throw err;
-            logger.debug("Connected [OK] to: " + host, "AbstractDB");
+            logger.debug("Database Connected [OK] to: " + host);
         }); 
     }
 

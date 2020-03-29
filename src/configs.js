@@ -1,0 +1,23 @@
+const fs = require('fs');
+var path = require('path');
+const yaml = require('js-yaml');
+var logger = require('../LogConfig');
+
+let mth40 = {};
+try {
+    var filename = path.join(__dirname, 'resources/application.yml');
+    let fileContents = fs.readFileSync(filename, 'utf8');
+    let mth40Properties = yaml.safeLoad(fileContents);
+
+    mth40 = {
+        config : {
+            API_PORT : process.env.API_PORT || mth40Properties.api.port,
+            DB_HOST : process.env.DB_HOST || mth40Properties.database.host
+        },
+        properties: mth40Properties
+    }
+} catch (e) {
+    logger.error(e);
+}
+
+module.exports = mth40;
