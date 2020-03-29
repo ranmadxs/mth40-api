@@ -71,8 +71,8 @@ app.get('/challonge/tournaments/', function (req, res) {
     });    
 });
 
-app.listen(mth40.config.API_PORT, function () {
-    logger.info('server running on port ' + mth40.config.API_PORT, 'app.listen');
+app.listen(mth40.config.PORT, function () {
+    logger.info('server running on port ' + mth40.config.PORT, 'app.listen');
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

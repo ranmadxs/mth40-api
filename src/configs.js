@@ -11,7 +11,7 @@ try {
 
     mth40 = {
         config : {
-            API_PORT : process.env.API_PORT || mth40Properties.api.port,
+            PORT : process.env.PORT || mth40Properties.api.port,
             DB_HOST : process.env.DB_HOST || mth40Properties.database.host
         },
         properties: mth40Properties
