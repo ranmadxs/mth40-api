@@ -8,7 +8,7 @@ class RedisFactory {
         this.init();
     }
 
-    async init() {        
+    async init(flushAll = false) {        
         var urlRedis = this.urlRedis;
         const redClient = this.client = redis.createClient(urlRedis);
         let promise = new Promise((resolve, reject) => {            
@@ -16,15 +16,17 @@ class RedisFactory {
                 logger.error(error);
                 reject (error);
             });
-            redClient.on("connect", function(x) {                
-                redClient.flushall();            
-                logger.debug("Redis flushall [TRUE]");        
+            redClient.on("connect", function(x) {        
+                logger.info("Redis Connected [OK] to: " + urlRedis);
                 resolve (true);
             });
         });
         let result = await promise;
         if(result == true){
-            logger.info("Redis Connected [OK] to: " + urlRedis);
+            if(flushAll){
+                redClient.flushall();
+            }                        
+            logger.debug("Redis flushall ["+flushAll+"]");        
         }
     }
 

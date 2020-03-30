@@ -29,7 +29,6 @@ class ChallongeSvc {
         else {
             logger.debug("get tournaments from challonge API");
             listTournaments = await this.listTournaments();
-            logger.debug(listTournaments);
             await redisFactory.set("tournaments", JSON.stringify(listTournaments));
             redisFactory.expire("tournaments", mth40.properties.redis.ttl.challongeTournaments);
         }        
