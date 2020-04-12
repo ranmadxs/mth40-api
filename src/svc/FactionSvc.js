@@ -11,8 +11,13 @@ class FactionSvc {
         return FactionSvc.instance;     
     }
 
-    listFactions () {
-        return {'XD': true};
+    find (factionName) {
+        const findCond = { "factions.name": factionName };
+        const queryObj = Service.find(findCond);
+        queryObj.exec((err, objValue) => {
+            if (err) logger.error(err);
+            return objValue;
+        });
     }
 };
 
