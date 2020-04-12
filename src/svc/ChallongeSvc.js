@@ -12,6 +12,7 @@ class ChallongeSvc {
             this.NAME = null;
             this.CODE = null;
             ChallongeSvc.instance = this;
+            logger.debug("Challonge SVC", "[SVC_INSTANCE]");
         }
         return ChallongeSvc.instance;     
     }

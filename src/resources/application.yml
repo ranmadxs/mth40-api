@@ -5,12 +5,20 @@ redis:
   url: redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009
   ttl:
     challongeTournaments: 300
+  flushAll: false
 
 database:
-  host: relatosdelaherejia.cl
-  user: relatosd_wh40k
-  password: Nueva123.
-  db_instance: relatosd_wh40k
+  mongodb:
+    url: mongodb://mth40k_usr:nueva123@ds263248.mlab.com:63248/heroku_kzt720hp
+    debug: false
+  mysql:
+    host: relatosdelaherejia.cl
+    user: relatosd_wh40k
+    password: Nueva123.
+    db_instance: relatosd_wh40k
 
 challonge:
   api_key: blFKNnvFaySPiWbTKkCUSdoxvf0WieaMrcWsMztX
+
+wahapedia:
+  armies_url: http://wahapedia.ru/wh40k8ed/the-rules/playing-this-game/

@@ -1,11 +1,15 @@
 const redis = require("async-redis");
 var logger = require('../../LogConfig');
+var mth40 = require ('../configs');
 
 class RedisFactory {
 
     constructor(){
-        var urlRedis = this.urlRedis = "redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009";
-        this.init();
+        this.urlRedis = mth40.properties.redis.url;
+        this.flushAll = mth40.properties.redis.flushAll || false;
+        this.connected = false;
+        this.init(this.flushAll);
+        logger.debug("Connection Redis Factory", "[REDIS_INIT]");
     }
 
     async init(flushAll = false) {        
@@ -17,17 +21,15 @@ class RedisFactory {
                 reject (error);
             });
             redClient.on("connect", function(x) {        
+                if(flushAll){
+                    redClient.flushall();
+                }                        
+                logger.debug("Redis flushall ["+flushAll+"]");                   
                 logger.info("Redis Connected [OK] to: " + urlRedis);
+                this.connected = true;
                 resolve (true);
             });
         });
-        let result = await promise;
-        if(result == true){
-            if(flushAll){
-                redClient.flushall();
-            }                        
-            logger.debug("Redis flushall ["+flushAll+"]");        
-        }
     }
 
     async set(key, value){

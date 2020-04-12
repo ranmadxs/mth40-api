@@ -4,6 +4,8 @@ const logger = require('../../LogConfig');
 
 const armySvc = require('../svc/ArmySvc');
 
+logger.info("Army Controller", "[CTRL_INIT]");
+
 // middleware that is specific to this router
 router.use(function timeLog(req, res, next) {
     logger.debug('Time: ', Date.now());

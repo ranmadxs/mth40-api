@@ -13,9 +13,10 @@ var mth40 = require ('./src/configs');
 const challongeSvc =  require('./src/svc/ChallongeSvc');
 var armyController = require('./src/controller/ArmyController');
 var rosterController = require('./src/controller/RosterController');
+var wahapediaController = require('./src/controller/WahapediaController');
+var mongoFactory = require('./src/factories/MongoConnectionFactory');
 
 const factionSvc = require('./src/svc/FactionSvc');
-
 logger.debug (mth40);
 
 // for parsing application/json
@@ -47,6 +48,7 @@ app.get('/', (req, res) =>
 
 app.use('/army', armyController);
 app.use('/roster', rosterController);
+app.use('/wahapedia', wahapediaController);
 
 /*
 app.get('/army/list/', function (req, res) {
@@ -72,7 +74,16 @@ app.get('/challonge/tournaments/', function (req, res) {
 });
 
 app.listen(mth40.config.PORT, function () {
-    logger.info('server running on port ' + mth40.config.PORT, 'app.listen');
+    logger.debug("mth40-api starting on port="+mth40.config.PORT);
+    let mongoPromised = mongoFactory.connect();
+    Promise.all([mongoPromised]).then(respVal => {        
+        console.log("*****************************************************");
+        console.log(respVal);
+        console.log('************ Server running on port ' + mth40.config.PORT + " ************");
+        console.log("*****************************************************");
+    }).catch(reason => { 
+        logger.error(reason);
+    });    
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

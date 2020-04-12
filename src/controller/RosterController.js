@@ -5,7 +5,9 @@ var multer = require('multer');
 var upload = multer();
 const rosterSvc =  require('../svc/RosterSvc');
 
-router.post('/validateRoster', upload.single("roster_file"), function(req, res) {
+logger.info("Roster Controller", "[CTRL_INIT]");
+
+router.post('/validate', upload.single("roster_file"), function(req, res) {
     logger.debug(req.route);
     logger.info(req.body.roster_json);
     logger.info(req.file);

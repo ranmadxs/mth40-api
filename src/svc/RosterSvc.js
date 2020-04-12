@@ -5,6 +5,7 @@ class RosterSvc {
     constructor() {
         if(! RosterSvc.instance) {
             RosterSvc.instance = this;
+            logger.debug("Roster SVC", "[SVC_INSTANCE]");
         }
         return RosterSvc.instance;     
     }

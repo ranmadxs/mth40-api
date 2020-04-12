@@ -22,7 +22,11 @@
     {
       "name": "army-api",
       "description": "Army, Factions, SubFactions API"
-    }
+    },
+    {
+      "name" : "wahapedia-api",
+      "description" : "Warhammer 40K Information, Factions, Rules, Stratagems"
+    }  
   ],
   "paths": {
      "/roster/validateRoster" : {
@@ -66,6 +70,33 @@
         }
       }
     },
+    "/wahapedia/factions": {
+      "get": {
+        "tags": [
+          "wahapedia-api"
+        ],
+        "summary": "Lista de Facciones y SubFacciones",
+        "operationId": "getFactions",
+        "description": "Obtiene la lista de Facciones y SubFacciones en Wahapedia.\n",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado de la lista de factions[]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Army"
+              }
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },    
     "/challonge/tournaments": {
       "get": {
         "tags": [
@@ -122,6 +153,17 @@
     }
   },
   "definitions" : {
+    "Faction" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        }
+      }
+    },    
     "Roster" : {
       "type" : "object",
       "properties" : {
@@ -144,6 +186,12 @@
         "code" : {
           "type" : "string",
           "example" : "XEN"
+        },
+        "factions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Faction"
+          }
         }
       }
     },
