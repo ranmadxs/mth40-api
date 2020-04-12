@@ -1,5 +1,6 @@
 var conFactory = require('../factories/MySQLConnectionFactory')
 var logger = require('../../LogConfig');
+var Army = require ('../schemas/ArmySchema');
 
 class FactionSvc {
     constructor() {
@@ -11,13 +12,12 @@ class FactionSvc {
         return FactionSvc.instance;     
     }
 
-    find (factionName) {
+    async find (factionName) {
+        logger.debug("find=" + factionName);
         const findCond = { "factions.name": factionName };
-        const queryObj = Service.find(findCond);
-        queryObj.exec((err, objValue) => {
-            if (err) logger.error(err);
-            return objValue;
-        });
+        const findFilter = { name: 1, factions: { $elemMatch: { name: {$eq :factionName} } } };
+        const queryObj = await Army.model.findOne(findCond, findFilter);
+        return queryObj;
     }
 };
 

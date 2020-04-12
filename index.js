@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./src/banner');
 const express = require('express');
 const app = express();
 var logger = require('./LogConfig');
@@ -15,6 +16,7 @@ var armyController = require('./src/controller/ArmyController');
 var rosterController = require('./src/controller/RosterController');
 var wahapediaController = require('./src/controller/WahapediaController');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
+var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
 
 const factionSvc = require('./src/svc/FactionSvc');
 logger.debug (mth40);
@@ -76,7 +78,8 @@ app.get('/challonge/tournaments/', function (req, res) {
 app.listen(mth40.config.PORT, function () {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);
     let mongoPromised = mongoFactory.connect();
-    Promise.all([mongoPromised]).then(respVal => {        
+    const mysqlPromised = mysqlFactory.connect();
+    Promise.all([mongoPromised, mysqlPromised]).then(respVal => {        
         console.log("*****************************************************");
         console.log(respVal);
         console.log('************ Server running on port ' + mth40.config.PORT + " ************");

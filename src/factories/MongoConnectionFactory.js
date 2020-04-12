@@ -17,12 +17,17 @@ class MongoConnectionFactory {
                     logger.info ('MongoDB ERROR connecting to: ' + uristring + '. ' + err);
                     reject({mongodb: false});
                 } else {
-                    logger.info ('MongoDB [OK] Succeeded connected to: ' + uristring);
+                    logger.info ('MongoDB [ON] Succeeded connected to: ' + uristring);
                     resolve({mongodb: true});
                     
                 }
-          });
+          });          
         });
+    }
+
+    async disconnect() {
+        logger.info("MongoDB [OFF]");
+        mongoose.disconnect();
     }
 }
 
