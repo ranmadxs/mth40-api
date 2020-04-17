@@ -6,11 +6,11 @@ test('findFaction by name', async () => {
     logger.debug("Test Faction by name");
 
     const promises = [];
-    promises.push(factionSvc.find("Orks"));
+    promises.push(factionSvc.find("Astra Militarum"));
 
     await Promise.all(promises).then(respVal => {
         logger.info(respVal[0]);
-        expect(respVal[0].name).toBe('Xenos');
+        expect(respVal[0].name).toBe('Imperium');
     }).catch(reason => { 
         logger.error(reason);
         expect(1).toBe(0);

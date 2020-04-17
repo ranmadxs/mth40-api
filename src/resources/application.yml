@@ -4,7 +4,7 @@ api:
 redis:
   url: redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009
   ttl:
-    challongeTournaments: 300
+    challongeTournaments: 600
   flushAll: false
 
 database:
@@ -21,4 +21,5 @@ challonge:
   api_key: blFKNnvFaySPiWbTKkCUSdoxvf0WieaMrcWsMztX
 
 wahapedia:
-  armies_url: http://wahapedia.ru/wh40k8ed/the-rules/playing-this-game/
+  armies_url: /wh40k8ed/the-rules/playing-this-game/
+  base_url: http://wahapedia.ru

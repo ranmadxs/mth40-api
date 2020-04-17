@@ -1,5 +1,6 @@
 var logger = require('../../LogConfig');
 const challongeSvc =  require('./ChallongeSvc');
+const factionSvc = require('./FactionSvc');
 
 class RosterSvc {
     constructor() {
@@ -38,7 +39,7 @@ class RosterSvc {
         return suggestions;
     }
 
-    async validateRoster(roster, rosterFile){
+    async validateRoster(roster){
         const rosterName = roster.name;
 
         var matches = rosterName.match(/\{(.*?)\}/);
@@ -70,6 +71,8 @@ class RosterSvc {
         roster['conferenceName'] = conferenceName;
         roster['teamOwner'] = teamOwner;
         logger.debug("validate Roster for " + factionMain);
+        logger.debug("Get Factions");
+        roster['forces'] = await factionSvc.findRosterFaction(roster.forces);
         return roster;
     }
 }

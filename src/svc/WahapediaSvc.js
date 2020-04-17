@@ -13,7 +13,7 @@ class WahapediaSvc {
 
     constructor() {
         if(! WahapediaSvc.instance) {
-            this.armies_url = mth40.properties.wahapedia.armies_url;
+            this.armies_url = mth40.properties.wahapedia.base_url + mth40.properties.wahapedia.armies_url;
             WahapediaSvc.instance = this;
             logger.debug("Wahapedia SVC", "[SVC_INSTANCE]");
         }

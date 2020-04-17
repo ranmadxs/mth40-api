@@ -29,7 +29,7 @@
     }  
   ],
   "paths": {
-     "/roster/validateRoster" : {
+     "/roster/validate" : {
       "post" : {
         "tags" : [ "roster-api" ],
         "summary" : "Validate Roster",
@@ -46,6 +46,14 @@
           "type" : "string",
           "default" : "{status:'VALIDATE', name:'Astra Millitarum-OT500-Primaris Psyker'}"
           }, 
+          {
+            "name" : "saveJson",
+            "in" : "query",
+            "description" : "Flag to activate json to File.",
+            "required" : false,
+            "type" : "string",
+            "default" : "false"
+          },
           {
             "name" : "roster_file",
             "in" : "formData",

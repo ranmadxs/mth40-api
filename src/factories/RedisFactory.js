@@ -8,11 +8,17 @@ class RedisFactory {
         this.urlRedis = mth40.properties.redis.url;
         this.flushAll = mth40.properties.redis.flushAll || false;
         this.connected = false;
-        this.init(this.flushAll);
+        //this.connect();
         logger.debug("Connection Redis Factory", "[REDIS_INIT]");
     }
 
-    async init(flushAll = false) {        
+    async disconnect(){
+        logger.info("Redis [OFF]");
+        this.client.quit();
+    }
+
+    async connect() {
+        const flushAll = this.flushAll;
         var urlRedis = this.urlRedis;
         const redClient = this.client = redis.createClient(urlRedis);
         let promise = new Promise((resolve, reject) => {            
@@ -27,9 +33,10 @@ class RedisFactory {
                 logger.debug("Redis flushall ["+flushAll+"]");                   
                 logger.info("Redis Connected [OK] to: " + urlRedis);
                 this.connected = true;
-                resolve (true);
+                resolve ({redis: true});
             });
         });
+        return promise;
     }
 
     async set(key, value){
@@ -50,5 +57,5 @@ class RedisFactory {
     }
 };
 const instance = new RedisFactory();
-Object.freeze(instance);
+//Object.freeze(instance);
 module.exports = instance;

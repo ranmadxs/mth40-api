@@ -49,7 +49,7 @@ exports.Pool = pool;
                     reject(err);
                 }
                 resolve({mysql: true});
-                logger.info("MySQL Database Connected [OK] to: " + this.propertieshost);
+                logger.info("MySQL Database Connected [OK] to: " + this.host);
             }); 
         });
     }

@@ -21,6 +21,8 @@ var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
 const factionSvc = require('./src/svc/FactionSvc');
 logger.debug (mth40);
 
+//nodemon index.js
+
 // for parsing application/json
 app.use(bodyParser.json()); 
 
@@ -79,7 +81,8 @@ app.listen(mth40.config.PORT, function () {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);
     let mongoPromised = mongoFactory.connect();
     const mysqlPromised = mysqlFactory.connect();
-    Promise.all([mongoPromised, mysqlPromised]).then(respVal => {        
+    const redisPromised = redisFactory.connect();
+    Promise.all([mongoPromised, mysqlPromised, redisPromised]).then(respVal => {        
         console.log("*****************************************************");
         console.log(respVal);
         console.log('************ Server running on port ' + mth40.config.PORT + " ************");
