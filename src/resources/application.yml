@@ -2,15 +2,16 @@ api:
   port: 4001
 
 redis:
-  url: redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009
+  #url: redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009
+  url: redis://localhost:6379
   ttl:
     challongeTournaments: 600
   flushAll: false
 
 database:
   mongodb:
-    url: mongodb://mth40k_usr:nueva123@ds263248.mlab.com:63248/heroku_kzt720hp
-    #url: mongodb://localhost/mth40?retryWrites=true&w=majority
+    #url: mongodb://mth40k_usr:nueva123@ds263248.mlab.com:63248/heroku_kzt720hp
+    url: mongodb://localhost/mth40?retryWrites=true&w=majority
     debug: true
   mysql:
     #host: relatosdelaherejia.cl

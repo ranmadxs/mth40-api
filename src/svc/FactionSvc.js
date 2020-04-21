@@ -31,19 +31,21 @@ class FactionSvc {
             const army = arrayArmy[0].trim();
             const factionName = arrayArmy[1].trim();
             const suggestionsLvl1 = await this.find(factionName);
-            faction['suggestion'] = {
-                army: {
-                    id: suggestionsLvl1._id,
-                    name: suggestionsLvl1.name,
-                    faction: {
-                        id: suggestionsLvl1.factions[0]._id,
-                        name: suggestionsLvl1.factions[0].name,
-                        url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url,
-                        subFaction: subFactionObj
-                    }
-                },
+            if(suggestionsLvl1 && suggestionsLvl1._id){
+                faction['suggestion'] = {
+                    army: {
+                        id: suggestionsLvl1._id,
+                        name: suggestionsLvl1.name,
+                        faction: {
+                            id: suggestionsLvl1.factions[0]._id,
+                            name: suggestionsLvl1.factions[0].name,
+                            url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url,
+                            subFaction: subFactionObj
+                        }
+                    },
+                }
+                factionsRet.push(faction);
             }
-            factionsRet.push(faction);
         }));
         logger.warn(factionsRet);
         return factions;        
