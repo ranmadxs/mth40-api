@@ -1,4 +1,3 @@
-var conFactory = require('../factories/MySQLConnectionFactory')
 var logger = require('../../LogConfig');
 var Army = require ('../schemas/ArmySchema');
 var mth40 = require ('../configs');
@@ -15,8 +14,19 @@ class FactionSvc {
 
     async findRosterFaction (factions) {
         let factionsRet = [];
+        let subFactionObj = {};
         await Promise.all( factions.map (async (faction) => {
-            //logger.info(faction);
+            if(faction.subFaction){
+                logger.info(faction.subFaction, "[SubFaction]");
+                let armySubFact = await this.findSubFaction(faction.subFaction);
+                //logger.info(armySubFact, "[SubFaction]");
+                if(armySubFact.length > 0){
+                    logger.debug(armySubFact[0].factions, "<<<<<<<<<<<>>>>>>>>>>>>>>X");
+                    subFactionObj = armySubFact[0].factions.subFactions;
+                }else {
+                    logger.warn("No tiene subfaction", faction.subFaction);
+                }
+            }
             const arrayArmy = faction.catalogueName.split('-');
             const army = arrayArmy[0].trim();
             const factionName = arrayArmy[1].trim();
@@ -24,17 +34,51 @@ class FactionSvc {
             faction['suggestion'] = {
                 army: {
                     id: suggestionsLvl1._id,
-                    name: suggestionsLvl1.name
+                    name: suggestionsLvl1.name,
+                    faction: {
+                        id: suggestionsLvl1.factions[0]._id,
+                        name: suggestionsLvl1.factions[0].name,
+                        url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url,
+                        subFaction: subFactionObj
+                    }
                 },
-                id: suggestionsLvl1.factions[0]._id,
-                name: suggestionsLvl1.factions[0].name,
-                url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url
             }
             factionsRet.push(faction);
         }));
         logger.warn(factionsRet);
-        return factions;
-        
+        return factions;        
+    }
+
+    async findSubFaction (subFactionName) {
+        logger.debug("find=" + subFactionName);
+        let armyRet = {};
+        const matchQuery = {
+            'factions.subFactions.name': { $eq: subFactionName },
+        };
+        const queryObj = Army.model.aggregate([
+            // First Stage
+            { $unwind: "$factions" },
+
+            // Second Stage
+            { $unwind: { path: "$factions.subFactions" } },
+            
+            // Third Stage
+            { $match: matchQuery },
+          ]);
+
+          let promiseQuery = new Promise( async (resolve, reject) => {
+            queryObj.exec((err, army) => {
+                if (err) reject(err);
+                resolve( army );
+            });
+          });
+
+          await promiseQuery.then((army) => {
+              armyRet = army;
+          });
+
+          return armyRet;
+
     }
 
     async find (factionName) {

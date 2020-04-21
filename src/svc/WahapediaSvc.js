@@ -20,6 +20,33 @@ class WahapediaSvc {
         return WahapediaSvc.instance;     
     }
 
+    async getSubFactions(url){
+      logger.debug("*************************************=====***************");
+      const folderHTML = appRoot + "/../../test/resources/html/";
+      const fileHTML = folderHTML + "example.html";
+
+      //fs.readFile( fileHTML, async (err, data) => {      
+      rp(url).then(function(html){
+        //logger.debug(html);    
+        /*  
+
+        logger.info("Save HTML to: " + fileHTML);        
+        fs.writeFile(fileHTML, html, function (err,data) {
+            if (err) {
+              return logger.error(err);
+            }
+            logger.info("Create file [OK]");
+        });    
+        */    
+        //const html = data.toString(); 
+        //logger.debug(html);
+        const $ = cheerio.load(html);
+        //const selector = $('.NavDropdown-content_P').html();
+        const selector = $('select').html();
+        logger.debug("================= SELECTOR IS COMMING ============== ");
+        logger.debug(selector);
+      });
+    }
 
     async getFactions(){
       rp(this.armies_url).then(function(html){

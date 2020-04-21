@@ -91,12 +91,45 @@
         ],
         "responses": {
           "200": {
-            "description": "Resultado de la lista de factions[]",
+            "description": "Resultado de exec del servicio",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Army"
-              }
+              "name" : "result",
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },    
+    "/wahapedia/subFactions": {
+      "get": {
+        "tags": [
+          "wahapedia-api"
+        ],
+        "summary": "Lista de Facciones y SubFacciones",
+        "operationId": "getFactions",
+        "description": "Obtiene la lista de Facciones y SubFacciones en Wahapedia.\n",
+        "produces": [
+          "application/json"
+        ],
+        "parameters" : [ 
+          {
+            "name" : "faction",
+            "in" : "query",
+            "description" : "Faction Name",
+            "required" : true,
+            "type" : "string",
+            "default" : "chaos-space-marines"
+          }
+        ],        
+        "responses": {
+          "200": {
+            "description": "Resultado de exec del servicio",
+            "schema": {
+              "name" : "result",
+              "type": "string"
             }
           },
           "400": {

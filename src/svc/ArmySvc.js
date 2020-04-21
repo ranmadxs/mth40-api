@@ -1,4 +1,3 @@
-var conFactory = require('../factories/MySQLConnectionFactory');
 var logger = require('../../LogConfig');
 var Army = require ('../schemas/ArmySchema');
 var async = require("async");
@@ -11,7 +10,7 @@ class ArmySvc {
         }
         return ArmySvc.instance;     
     }
-
+    
     async saveArmy (armyArray) {
         async.mapLimit(armyArray, 10, function(armyJson){
             Army.model.updateOne(
@@ -38,6 +37,10 @@ class ArmySvc {
 
     listArmy () {
         return new Promise(function (resolve, reject) {
+            resolve( {resp: true});
+        });
+        /*
+        return new Promise(function (resolve, reject) {
             conFactory.getConnection().query("SELECT * FROM `ARMY`", function (err, result, fields) {
                 if (err) throw err;
                 resolve(result.map(({
@@ -50,6 +53,7 @@ class ArmySvc {
                 //logger.debug(fields);
             });            
         });
+        */
     }
 };
 

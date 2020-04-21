@@ -10,12 +10,17 @@ redis:
 database:
   mongodb:
     url: mongodb://mth40k_usr:nueva123@ds263248.mlab.com:63248/heroku_kzt720hp
-    debug: false
+    #url: mongodb://localhost/mth40?retryWrites=true&w=majority
+    debug: true
   mysql:
-    host: relatosdelaherejia.cl
-    user: relatosd_wh40k
-    password: Nueva123.
-    db_instance: relatosd_wh40k
+    #host: relatosdelaherejia.cl
+    #user: relatosd_wh40k
+    #password: Nueva123.
+    #db_instance: relatosd_wh40k
+    host: u0zbt18wwjva9e0v.cbetxkdyhwsb.us-east-1.rds.amazonaws.com	
+    user: fgwr0eqvwtaijamb
+    password: tsp0gaybdzyuaeuv
+    db_instance: m7vety412v628e4l
 
 challonge:
   api_key: blFKNnvFaySPiWbTKkCUSdoxvf0WieaMrcWsMztX

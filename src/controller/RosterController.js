@@ -12,8 +12,8 @@ logger.info("Roster Controller", "[CTRL_INIT]");
 
 router.post('/validate', upload.single("roster_file"), function(req, res) {
     logger.debug(req.route);
-    logger.info(req.body.roster_json);
-    logger.info(req.file);
+    //logger.debug(req.body.roster_json);
+    //logger.info(req.file);
     if(req.query.saveJson == "true"){
         folderJson = appRoot + "/../../test/resources/roster_json/";
         const originalName = req.file.originalname.replace("'", "");
