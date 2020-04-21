@@ -79,14 +79,14 @@ app.get('/challonge/tournaments/', function (req, res) {
 
 app.listen(mth40.config.PORT, function () {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);
-    let mongoPromised = mongoFactory.connect();
+    const mongoPromised = mongoFactory.connect();
     const mysqlPromised = mysqlFactory.connect();
     const redisPromised = redisFactory.connect();
     Promise.all([mongoPromised, mysqlPromised, redisPromised]).then(respVal => {        
-        console.log("*****************************************************");
+        console.log("********************************************************");
         console.log(respVal);
-        console.log('************ Server running on port ' + mth40.config.PORT + " ************");
-        console.log("*****************************************************");
+        console.log('************* Server running on port ' + mth40.config.PORT + " **************");
+        console.log("********************************************************");
     }).catch(reason => { 
         logger.error(reason);
     });    

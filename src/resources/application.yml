@@ -1,5 +1,5 @@
 api:
-  port: 3000
+  port: 4001
 
 redis:
   url: redis://h:pd84c59ffd70de057d03f71c553bf6e1a6a1ad076ee9b3ff89bc2e6115be72fde@ec2-52-202-26-118.compute-1.amazonaws.com:14009

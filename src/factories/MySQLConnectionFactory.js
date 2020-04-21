@@ -34,7 +34,8 @@ exports.Pool = pool;
 
     }
 
-    async connect(){        
+    async connect(){ 
+        const hostConn = this.host;    
         return new Promise((resolve, reject) => {        
             this.con = mysql.createConnection({
                 host: this.host,
@@ -49,7 +50,7 @@ exports.Pool = pool;
                     reject(err);
                 }
                 resolve({mysql: true});
-                logger.info("MySQL Database Connected [OK] to: " + this.host);
+                logger.info("MySQL Database Connected [OK] to: " + hostConn);
             }); 
         });
     }

@@ -1,6 +1,7 @@
 var logger = require('../../LogConfig');
 const challongeSvc =  require('./ChallongeSvc');
 const factionSvc = require('./FactionSvc');
+const unitSvc = require('./UnitSvc');
 
 class RosterSvc {
     constructor() {
@@ -73,6 +74,9 @@ class RosterSvc {
         logger.debug("validate Roster for " + factionMain);
         logger.debug("Get Factions");
         roster['forces'] = await factionSvc.findRosterFaction(roster.forces);
+        roster['forces'].forEach(force => {
+            force = unitSvc.findUnits(force);
+        });
         return roster;
     }
 }

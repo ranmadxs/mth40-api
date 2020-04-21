@@ -5,10 +5,30 @@ var path = require('path');
 global.appRoot = path.resolve(__dirname);
 
 test('Validate Roster', async () => {
-    fileName = appRoot+"/../test/roster_json/Imperium-Astra Militarum{OT500-V01}Primaris Psyker.json";
-    logger.debug("Validate Roster Test init load file");
+    fileName = appRoot+"/../resources/roster_json/Imperium-Astra Militarum{OT500-V01}Primaris Psyker.json";
+    logger.info("Validate Roster Test init load file");
+    await fs.readFile( fileName, async (err, data) => {
+        if (err) {
+            logger.error(err);
+            throw err;
+        }
+        
+        let rosterObj = JSON.parse(data.toString());
+        logger.info(rosterObj);
 
-    const promises = [];
+        const rosterValid = await rosterSvc.validateRoster(rosterObj);
+        //promises.push(rosterSvc.validateRoster(rosterObj));
+        /*
+        await Promise.all(promises).then(faction => {
+            logger.debug(faction);
+        }).catch(reason => { 
+            logger.error(reason);
+            expect(1).toBe(0);
+        });             
+        */
+    });
+
+    
     
     /*
     promises.push(factionSvc.find("Astra Militarum"));
