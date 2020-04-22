@@ -10,23 +10,18 @@ global.appRoot = path.resolve(__dirname);
 
 logger.info("Roster Controller", "[CTRL_INIT]");
 
-router.post('/validate', upload.single("roster_file"), function(req, res) {
+router.post('/save', upload.single("roster_file"), function(req, res) {
     logger.debug(req.route);
-    //logger.debug(req.body.roster_json);
-    //logger.info(req.file);
-    if(req.query.saveJson == "true"){
-        folderJson = appRoot + "/../../test/resources/roster_json/";
-        const originalName = req.file.originalname.replace("'", "");
-        fileJson = folderJson + originalName.replace(".ros", ".json");
-        logger.info("Save Json to: " + fileJson);        
-        fs.writeFile(fileJson, req.body.roster_json, function (err,data) {
-            if (err) {
-              return logger.error(err);
-            }
-            logger.info("Create file [OK]");
-        });            
-    }
-    
+    logger.debug(req.file.originalname, 'fileName');
+    logger.debug(req.body.roster_json, 'roster');
+    const result = {result: true};
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(result));    
+});
+
+router.post('/validate', function(req, res) {
+    logger.debug(req.route);
+    logger.debug(req.body.roster_json);
     rosterSvc.validateRoster(JSON.parse(req.body.roster_json)).then(result => {
         //logger.debug(result);
         res.writeHead(200, {'Content-Type': 'application/json'});

@@ -5,7 +5,7 @@ var mth40 = require ('../configs');
 class RedisFactory {
 
     constructor(){
-        this.urlRedis = mth40.properties.redis.url;
+        this.urlRedis = mth40.config.REDIS_URL;
         this.flushAll = mth40.properties.redis.flushAll || false;
         this.connected = false;
         //this.connect();

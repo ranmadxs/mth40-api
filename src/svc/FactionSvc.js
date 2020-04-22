@@ -16,39 +16,59 @@ class FactionSvc {
         let factionsRet = [];
         let subFactionObj = {};
         await Promise.all( factions.map (async (faction) => {
-            if(faction.subFaction){
-                logger.info(faction.subFaction, "[SubFaction]");
-                let armySubFact = await this.findSubFaction(faction.subFaction);
-                //logger.info(armySubFact, "[SubFaction]");
-                if(armySubFact.length > 0){
-                    logger.debug(armySubFact[0].factions, "<<<<<<<<<<<>>>>>>>>>>>>>>X");
-                    subFactionObj = armySubFact[0].factions.subFactions;
-                }else {
-                    logger.warn("No tiene subfaction", faction.subFaction);
-                }
-            }
             const arrayArmy = faction.catalogueName.split('-');
             const army = arrayArmy[0].trim();
             const factionName = arrayArmy[1].trim();
             const suggestionsLvl1 = await this.find(factionName);
             if(suggestionsLvl1 && suggestionsLvl1._id){
+                const armyId = suggestionsLvl1._id;
+                const factionName = suggestionsLvl1.factions[0].name;
+                const subFactionName = faction.subFaction;
+                if(subFactionName){
+                    logger.debug(subFactionName, "[SubFaction]");
+                    let armySubFact = await this.findSubFaction(subFactionName);
+                    //logger.info(armySubFact, "[SubFaction]");
+                    if(armySubFact.length > 0){
+                        logger.debug(armySubFact[0].factions, "[READY]");
+                        subFactionObj = armySubFact[0].factions.subFactions;
+                    }else {
+                        logger.warn("No tiene subfaction", subFactionName);
+                        this.addSubFaction(armyId, factionName, subFactionName);
+                        subFactionObj["name"] = subFactionName;
+                    }
+                }    
                 faction['suggestion'] = {
                     army: {
-                        id: suggestionsLvl1._id,
+                        id: armyId,
                         name: suggestionsLvl1.name,
                         faction: {
-                            id: suggestionsLvl1.factions[0]._id,
-                            name: suggestionsLvl1.factions[0].name,
+                            name: factionName,
                             url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url,
                             subFaction: subFactionObj
                         }
                     },
                 }
+                const factionAux = suggestionsLvl1.factions[0];
                 factionsRet.push(faction);
             }
         }));
         logger.warn(factionsRet);
         return factions;        
+    }
+
+    async addSubFaction(armyId, factionName, subFactionName) {   
+        const res = await Army.model.updateOne(
+            { 'factions.name':factionName },
+            {
+              $addToSet: {
+                "factions.$.subFactions": {
+                     "name": subFactionName
+                }
+              }
+            }
+         );
+        logger.info (res);
+        logger.info("> Add SubFaction = " + subFactionName, "[OK]");      
     }
 
     async findSubFaction (subFactionName) {

@@ -4,7 +4,7 @@ var mth40 = require ('../configs');
 
 class MongoConnectionFactory {
     constructor(){
-        this.url = mth40.properties.database.mongodb.url;
+        this.url = mth40.config.MONGO_URL;
         logger.debug("MongoDB Factory", "[DB_INIT]");
     }
 
