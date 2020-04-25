@@ -25,6 +25,7 @@ database:
 
 challonge:
   api_key: blFKNnvFaySPiWbTKkCUSdoxvf0WieaMrcWsMztX
+  base_url: https://api.challonge.com/v1
 
 wahapedia:
   armies_url: /wh40k8ed/the-rules/playing-this-game/

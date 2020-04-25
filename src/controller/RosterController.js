@@ -10,18 +10,39 @@ global.appRoot = path.resolve(__dirname);
 
 logger.info("Roster Controller", "[CTRL_INIT]");
 
-router.post('/save', upload.single("roster_file"), function(req, res) {
+router.post('/save', upload.single("roster_file"), async (req, res) => {
     logger.debug(req.route);
     logger.debug(req.file.originalname, 'fileName');
-    logger.debug(req.body.roster_json, 'roster');
-    const result = {result: true};
+    //logger.debug(req.body.roster_json, 'roster');    
+    var jsonStr = JSON.stringify( JSON.parse(req.body.roster_json), function( key, value ) {
+        if( key === "$$hashKey" ) {
+            return undefined;
+        }
+    
+        return value;
+    });    
+
+    let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
+    rosterSvc.saveFile(req.file, roster);
     res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(result));    
+    delete roster._id;
+    res.end(JSON.stringify(roster));    
+});
+
+router.post('/findParticipant', function(req, res) {
+    //logger.debug(req.route);
+    //logger.debug(req.body.roster_json);
+    rosterSvc.suggestionParticipant(JSON.parse(req.body.roster_json)).then(result => {
+        //logger.debug(result);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.end(JSON.stringify(result));
+    });    
+    
 });
 
 router.post('/validate', function(req, res) {
-    logger.debug(req.route);
-    logger.debug(req.body.roster_json);
+    //logger.debug(req.route);
+    //logger.debug(req.body.roster_json);
     rosterSvc.validateRoster(JSON.parse(req.body.roster_json)).then(result => {
         //logger.debug(result);
         res.writeHead(200, {'Content-Type': 'application/json'});

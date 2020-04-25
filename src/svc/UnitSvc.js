@@ -13,7 +13,8 @@ class UnitSvc {
     }
 
     transformName(name, key){
-        return name.replace(" ", key);
+        const cleanName = name.replace(/\s/g, key);        
+        return cleanName;
     }
 
     findUnits(faction) {

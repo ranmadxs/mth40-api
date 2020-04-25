@@ -17,6 +17,26 @@ class ChallongeSvc {
         return ChallongeSvc.instance;     
     }
 
+    
+    async participants(cache = true, tournamentId){
+        var listParticipants = [];
+        const redisKey = "participants_"+tournamentId;
+        let existsCache = await redisFactory.exists(redisKey);
+        if(cache && existsCache){      
+            logger.debug("get participants from cache", tournamentId);     
+            const valueRedis = await redisFactory.get(redisKey);
+            redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
+            listParticipants = JSON.parse(valueRedis);
+        }
+        else {
+            logger.debug("get participants from challonge API", tournamentId);
+            listParticipants = await this.listParticipants(tournamentId);
+            await redisFactory.set(redisKey, JSON.stringify(listParticipants));
+            redisFactory.expire("participants", mth40.properties.redis.ttl.challongeTournaments);
+        }        
+        return listParticipants;
+    }     
+
     async tournaments(cache = true) {
         var listTournaments = [];
         
@@ -36,10 +56,38 @@ class ChallongeSvc {
         return listTournaments;
     }
 
+    async listParticipants(tournamentId) {
+        var api_key = mth40.properties.challonge.api_key;
+        var session_url = mth40.properties.challonge.base_url + '/tournaments/'+tournamentId+'/participants.json?api_key='+api_key;
+        var participants = axios.get(session_url)
+        .then(response => {
+            var participants = [];
+            response.data.forEach(element => {
+                var fullParticipant = element.participant;
+                var participant = {
+                    id: fullParticipant.id,
+                    name: fullParticipant.name,
+                    tournament_id: fullParticipant.tournament_id,
+                    created_at: fullParticipant.created_at,
+                    seed: fullParticipant.seed,
+                    attached_participatable_portrait_url: fullParticipant.attached_participatable_portrait_url
+                };
+                participants.push(participant); 
+
+            }); 
+            return (participants);
+        }).catch(error => {
+            logger.error(error);
+            reject(error);
+        });
+
+        return participants;
+    }
+
     async listTournaments() {
         
-        var api_key = 'blFKNnvFaySPiWbTKkCUSdoxvf0WieaMrcWsMztX';
-        var session_url = 'https://api.challonge.com/v1/tournaments.json?api_key='+api_key;
+        var api_key = mth40.properties.challonge.api_key;
+        var session_url = mth40.properties.challonge.base_url + '/tournaments.json?api_key='+api_key;
         var tournaments = axios.get(session_url)
         .then(response => {
             var tournaments = [];

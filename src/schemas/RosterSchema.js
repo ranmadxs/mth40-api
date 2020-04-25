@@ -9,7 +9,12 @@ var rosterSchema = new mongoose.Schema({
     name: { type: String, trim: true },
     costs: CostSchema.schema ,
     gameSystemName: { type: String, trim: true },
-    gameSystemRevision: { type: String, trim: true }
+    gameSystemRevision: { type: String, trim: true },
+    tournaments: [],
+    mainFaction: { type: String, trim: true },
+    conferenceName: { type: String, trim: true },
+    teamOwner: { type: String, trim: true },
+    createdAt: {type: Date, default: Date.now}
 });
 
 const model = mongoose.model('Roster', rosterSchema);

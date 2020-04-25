@@ -5,6 +5,7 @@ var armySchema = new mongoose.Schema({
     name: { type: String, trim: true },
     code: { type: String, trim: true },
     factions: [Faction.schema],
+    createdAt: {type: Date, default: Date.now}
   });
 
 const model = mongoose.model('Army', armySchema);
