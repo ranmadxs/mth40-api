@@ -39,7 +39,11 @@ class RedisFactory {
         return promise;
     }
 
-    async set(key, value){
+    async flushall() {
+        this.client.flushall();
+    }
+
+    async set(key, value) {
         await this.client.set(key, value);
     }
 

@@ -15,6 +15,7 @@ const challongeSvc =  require('./src/svc/ChallongeSvc');
 var armyController = require('./src/controller/ArmyController');
 var rosterController = require('./src/controller/RosterController');
 var wahapediaController = require('./src/controller/WahapediaController');
+var configController = require('./src/controller/ConfigController');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
 //var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
 
@@ -53,18 +54,7 @@ app.get('/', (req, res) =>
 app.use('/army', armyController);
 app.use('/roster', rosterController);
 app.use('/wahapedia', wahapediaController);
-
-/*
-app.get('/army/list/', function (req, res) {
-    console.debug(req.route, '/army/list/');
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    var promisedResult = armySvc.listArmy();
-    promisedResult.then(function (result) {
-        logger.info(result);
-        res.end(JSON.stringify(result));
-    });       
-});
-*/
+app.use('/config', configController);
 
 app.get('/challonge/tournaments/', function (req, res) {
     //console.debug(req.route, '/challonge/tournaments/');

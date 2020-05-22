@@ -26,6 +26,10 @@
     {
       "name" : "wahapedia-api",
       "description" : "Warhammer 40K Information, Factions, Rules, Stratagems"
+    },
+    {
+      "name" : "config-api",
+      "description" : "Config wh40 api, like Redis and others"
     }  
   ],
   "paths": {
@@ -129,6 +133,31 @@
         }
       }
     },    
+    "/config/redis/clear": {
+      "get": {
+        "tags": [
+          "config-api"
+        ],
+        "summary": "Borra la cache de redis completa",
+        "operationId": "flushall",
+        "description": "Elimina todas las keys de Redis",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Resultado operación Redis Flushall",
+            "schema": {
+              "name" : "result",
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },     
     "/challonge/tournaments": {
       "get": {
         "tags": [

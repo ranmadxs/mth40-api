@@ -101,8 +101,13 @@ class ChallongeSvc {
                     game_name: fullTournament.game_name,
                     state: fullTournament.state,
                     event_id: fullTournament.event_id,
+                    created_at: fullTournament.created_at,
                     started_at: fullTournament.started_at,
                     completed_at: fullTournament.completed_at,
+                    game_id: fullTournament.game_id,
+                    game_name: fullTournament.game_name,
+                    participants_count: fullTournament.participants_count,
+                    progress_meter: fullTournament.progress_meter,
                 };
                 tournaments.push(tournament); 
 
@@ -120,4 +125,3 @@ class ChallongeSvc {
 const instance = new ChallongeSvc();
 Object.freeze(instance);
 module.exports = instance;
-
