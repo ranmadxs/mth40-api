@@ -11,11 +11,11 @@ var multer = require('multer');
 var upload = multer();
 var redisFactory = require('./src/factories/RedisFactory');
 var mth40 = require ('./src/configs');
-const challongeSvc =  require('./src/svc/ChallongeSvc');
 var armyController = require('./src/controller/ArmyController');
 var rosterController = require('./src/controller/RosterController');
 var wahapediaController = require('./src/controller/WahapediaController');
 var configController = require('./src/controller/ConfigController');
+var challongeController = require('./src/controller/ChallongeController');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
 //var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
 
@@ -29,14 +29,6 @@ app.use(bodyParser.json());
 
 // for parsing application/xwww-
 app.use(bodyParser.urlencoded({ extended: true })); 
-//form-urlencoded
-
-app.post('/uploads', upload.single("roster_file"),(req, res) => {
-    let formData = req.body;
-    console.log('form data', formData);
-    console.log('form data', req.file);
-    res.status(200).send(JSON.stringify({'xd': 'OK'}));
-  });
 
 app.use(
         cors({
@@ -55,17 +47,7 @@ app.use('/army', armyController);
 app.use('/roster', rosterController);
 app.use('/wahapedia', wahapediaController);
 app.use('/config', configController);
-
-app.get('/challonge/tournaments/', function (req, res) {
-    //console.debug(req.route, '/challonge/tournaments/');
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    var promisedResult = challongeSvc.tournaments();
-
-    promisedResult.then(function (result) {
-        logger.info(result);
-        res.end(JSON.stringify(result));
-    });    
-});
+app.use('/challonge', challongeController);
 
 app.listen(mth40.config.PORT, function () {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);

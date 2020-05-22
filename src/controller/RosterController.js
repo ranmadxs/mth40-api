@@ -51,4 +51,11 @@ router.post('/validate', function(req, res) {
     
 });
 
+router.get('/list', async (req, res) => {
+    const projections = req.query.projections || null;
+    const result = await rosterSvc.listRosters(projections); 
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(result));
+});
+
 module.exports = router;

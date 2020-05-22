@@ -14,9 +14,16 @@ var rosterSchema = new mongoose.Schema({
     mainFaction: { type: String, trim: true },
     conferenceName: { type: String, trim: true },
     teamOwner: { type: String, trim: true },
-    createdAt: {type: Date, default: Date.now}
+    createdAt: {type: Date, default: Date.now},
+    updateAt: {type: Date, default: Date.now}
 });
 
+/*
+rosterSchema.pre('updateOne', function( next ) {
+    console.log(this.__v, 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx');
+    this.update({}, { $inc: { __v: 1 } }, next );
+});
+*/
 const model = mongoose.model('Roster', rosterSchema);
 
 module.exports = {

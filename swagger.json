@@ -74,6 +74,39 @@
         }
       }
     },
+    "/roster/list" : {
+      "get" : {
+        "tags" : [ "roster-api" ],
+        "summary" : "List Rosters",
+        "description" : "Entrega la lista de rosters que hay en la base de datos",
+        "operationId" : "listRosters",
+        "produces" : [ "application/json" ],
+        "parameters" : [ 
+          {
+          "name" : "projections",
+          "in" : "query",
+          "description" : "Projections fields separate by space",
+          "required" : false,
+          "type" : "string",
+          "default" : "name teamOwner status"
+          }
+        ],        
+        "responses" : {
+          "200" : {
+            "description" : "Resultado de la lista de rosters[]",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Roster"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Mala petición"
+          }
+        }
+      }
+    },    
      "/roster/validate" : {
       "post" : {
         "tags" : [ "roster-api" ],

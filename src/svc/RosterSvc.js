@@ -85,14 +85,27 @@ class RosterSvc {
 
     async saveRoster(rosterJSON){       
         logger.debug(rosterJSON.name, "[INIT_SAVE]");
-        let roster = new Roster.model(rosterJSON);
-        logger.info(roster);
-        roster.status = "SAVED";      
-        await roster.save(function (err) {if (err) logger.error (err, "Error Save Roster")});
+        rosterJSON.status = "SAVED";
+        rosterJSON.updateAt = new Date();
+        await Roster.model.updateOne({ name: rosterJSON.name,  }, 
+            {
+                $set: {
+                    ... rosterJSON
+                  },
+                $inc: { __v: 1 }
+            },
+            rosterJSON).
+            then((result) => {
+                if (result.n === 0) {
+                    logger.warn(result, 'No se ha encontrado el roster');
+                    let roster = new Roster.model(rosterJSON);
+                    roster.save(function (err) {if (err) logger.error (err, "Error Save Roster")});
+                }    else{
+                }            
+        });
 
-        logger.info(roster, "saveRoster [OK]");
-        
-        return roster;        
+        logger.info(rosterJSON, "saveRoster [OK]");        
+        return rosterJSON;        
     }
     async validateRoster(roster){
         const rosterName = roster.name;
@@ -133,6 +146,16 @@ class RosterSvc {
         });
         return roster;
     }
+
+    async listRosters(projections = null) {
+        let rosters = [];
+        await Roster.model.find({}, projections, (err, rostersList) => {
+            console.log(rostersList);
+            rosters = rostersList;
+        });
+        return rosters;
+    }
+
 }
 
 const instance = new RosterSvc();

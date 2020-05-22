@@ -12,6 +12,7 @@ class MongoConnectionFactory {
         const uristring = this.url;
         return new Promise(function (resolve, reject) {
             mongoose.set('debug', mth40.properties.database.mongodb.debug);
+            mongoose.set('useFindAndModify', false);
             mongoose.connect(uristring, { useNewUrlParser: true , useUnifiedTopology: true}, function (err, res) {
                 if (err) {
                     logger.info ('MongoDB ERROR connecting to: ' + uristring + '. ' + err);

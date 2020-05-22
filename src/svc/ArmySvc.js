@@ -21,9 +21,10 @@ class ArmySvc {
                 $set: {
                     factions: armyJson.factions
                   },
+                $inc: { __v: 1 }
                 },
             ).then((result) => {
-                if (result.nModified === 0) {
+                if (result.n === 0) {
                     logger.warn("Se esta ingresando un registro nuevo", armyJson.name);
                     var army = new Army.model({
                         name: armyJson.name,

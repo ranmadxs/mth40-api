@@ -16,7 +16,6 @@ class ChallongeSvc {
         }
         return ChallongeSvc.instance;     
     }
-
     
     async participants(cache = true, tournamentId){
         var listParticipants = [];
