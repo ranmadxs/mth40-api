@@ -16,7 +16,7 @@
     "description" : "All Roster Battlescribe Services"
     },
     {
-      "name": "challonge-tournaments",
+      "name": "challonge-api",
       "description": "Servicios de challonge API para torneos"
     },
     {
@@ -194,7 +194,7 @@
     "/challonge/tournaments": {
       "get": {
         "tags": [
-          "challonge-tournaments"
+          "challonge-api"
         ],
         "summary": "Lista de Torneos",
         "operationId": "listTournaments",
@@ -210,6 +210,40 @@
               "items": {
                 "$ref": "#/definitions/tournament"
               }
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },
+    "/challonge/matches": {
+      "get": {
+        "tags": [
+          "challonge-api"
+        ],
+        "summary": "Lista de Partidas",
+        "operationId": "listMatches",
+        "description": "Obtiene la lista de Juegos por TournamentId en Challonge.\n",
+        "produces": [
+          "application/json"
+        ],
+        "parameters" : [ 
+          {
+            "name" : "tournamentId",
+            "in" : "query",
+            "description" : "Challonge Tournament Id",
+            "required" : false,
+            "type" : "integer",
+            "default": 7968317
+          }
+        ],          
+        "responses": {
+          "200": {
+            "description": "Resultado de la lista de matches[]",
+            "schema": {
+              "type": "array"
             }
           },
           "400": {

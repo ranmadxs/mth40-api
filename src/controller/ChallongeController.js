@@ -6,7 +6,6 @@ const challongeSvc =  require('../svc/ChallongeSvc');
 logger.info("Challonge Controller", "[CTRL_INIT]");
 
 router.get('/tournaments', function (req, res) {
-    //console.debug(req.route, '/challonge/tournaments/');
     res.writeHead(200, {'Content-Type': 'application/json'});
     var promisedResult = challongeSvc.tournaments();
 
@@ -14,6 +13,17 @@ router.get('/tournaments', function (req, res) {
         logger.info(result);
         res.end(JSON.stringify(result));
     });    
+});
+
+router.get('/matches', async (req, res) => {
+    const tournamentId = req.query.tournamentId || null;
+    if(tournamentId == null) {
+        res.writeHead(400, {'Content-Type': 'text/plain'});
+        res.end('tournament Id required');    
+    }
+    const result = await challongeSvc.matches(tournamentId);
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(result));  
 });
 
 module.exports = router;
