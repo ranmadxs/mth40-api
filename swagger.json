@@ -234,7 +234,7 @@
             "name" : "tournamentId",
             "in" : "query",
             "description" : "Challonge Tournament Id",
-            "required" : false,
+            "required" : true,
             "type" : "integer",
             "default": 7968317
           }
@@ -242,6 +242,56 @@
         "responses": {
           "200": {
             "description": "Resultado de la lista de matches[]",
+            "schema": {
+              "type": "array"
+            }
+          },
+          "400": {
+            "description": "Mala petición"
+          }
+        }
+      }
+    },
+    "/challonge/tournament": {
+      "get": {
+        "tags": [
+          "challonge-api"
+        ],
+        "summary": "Obtiene un torneo de Challonge",
+        "operationId": "getTournament",
+        "description": "Obtiene el Torneo de Challonge, opcionales los participantes y partidas.\n",
+        "produces": [
+          "application/json"
+        ],
+        "parameters" : [ 
+          {
+            "name" : "tournamentId",
+            "in" : "query",
+            "description" : "Challonge Tournament Id",
+            "required" : true,
+            "type" : "integer",
+            "default": 7968317
+          },
+          {
+            "name" : "include_participants",
+            "in" : "query",
+            "description" : "Include Participants Flag",
+            "required" : false,
+            "type" : "integer",
+            "default": 1
+          },
+          {
+            "name" : "include_matches",
+            "in" : "query",
+            "description" : "Include Matches Flag",
+            "required" : false,
+            "type" : "integer",
+            "default": 1
+          }
+        ],          
+        "responses": {
+          "200": {
+            "description": "Resultado Tournament",
             "schema": {
               "type": "array"
             }

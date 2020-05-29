@@ -3,12 +3,13 @@ const btoa = require('btoa');
 var redisFactory = require('../factories/RedisFactory');
 var logger = require('../../LogConfig');
 var mth40 = require ('../configs');
+var challongeUtils = require ('../utils/ChallongeUtils');
 
 class ChallongeSvc {
 
     constructor() {
         if(! ChallongeSvc.instance) {
-            this.CACHE = true;
+            this.CACHE = false;
             ChallongeSvc.instance = this;
             logger.debug("Challonge SVC", "[SVC_INSTANCE]");
         }
@@ -52,9 +53,44 @@ class ChallongeSvc {
         return listMatches;
     }
 
-    // Todo: Se debe crear un tournament y de esta forma incluir participantes y matches
     async getTournament(tournamentId, include_participants = 0, include_matches = 0){
+        const redisKey = `getTournament_id=${tournamentId}`;
+        let existsCache = await redisFactory.exists(redisKey);
+        let tournament = null;
+        if (this.CACHE && existsCache) {
+            logger.debug("get participant from cache");
+            const valueRedis = await redisFactory.get(redisKey);
+            redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
+            tournament = JSON.parse(valueRedis);
+        } else{
+            var api_key = mth40.properties.challonge.api_key;
+            var session_url = mth40.properties.challonge.base_url 
+                + '/tournaments/'+tournamentId 
+                + '.json?api_key='+api_key 
+                + '&include_participants=' + include_participants
+                + '&include_matches=' + include_matches;
+            tournament = await axios.get(session_url)
+                .then(response => {
+                    const fullTournament = response.data.tournament;
+                    /*
+                    let matches = [];
+                    fullTournament.matches.forEach(match => {
+                        const state = match.state;
 
+                        if()
+                    });
+                    */
+                    let matches = fullTournament.matches;
+                    let participants = fullTournament.participants;
+                    var tournament = challongeUtils.formatTournamet(fullTournament);
+//                    matches: matches,
+//                    participants: participants,
+
+                    console.log(tournament, 'tournament');
+                    return tournament;
+            });
+        }
+        return tournament;
     }
 
     async getParticipant(tournamentId, participantId) {
@@ -85,6 +121,8 @@ class ChallongeSvc {
                     };                    
                     return participant;
             });
+            await redisFactory.set(redisKey, JSON.stringify(participant));
+            redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
         }        
         return participant;
     }
@@ -125,11 +163,9 @@ class ChallongeSvc {
                         matchNumber: fullMatch.suggested_play_order,
                         matchIdentifier: fullMatch.identifier,        
                     };
-                    console.log(match);
                     matches.push(match);
                 }
             }
-            console.log(matches, 'matches');
             return (matches);
         }).catch(error => {
             logger.error(error);
@@ -195,24 +231,8 @@ class ChallongeSvc {
             var tournaments = [];
             response.data.forEach(element => {
                 var fullTournament = element.tournament;
-                var tournament = {
-                    id: fullTournament.id,
-                    name: fullTournament.name,
-                    url: fullTournament.full_challonge_url,
-                    tournament_type: fullTournament.tournament_type,
-                    game_name: fullTournament.game_name,
-                    state: fullTournament.state,
-                    event_id: fullTournament.event_id,
-                    created_at: fullTournament.created_at,
-                    started_at: fullTournament.started_at,
-                    completed_at: fullTournament.completed_at,
-                    game_id: fullTournament.game_id,
-                    game_name: fullTournament.game_name,
-                    participants_count: fullTournament.participants_count,
-                    progress_meter: fullTournament.progress_meter,
-                };
-                tournaments.push(tournament); 
-
+                var tournament = challongeUtils.formatTournamet(fullTournament);
+                tournaments.push(tournament);
             }); 
             return (tournaments);
         }).catch(error => {
