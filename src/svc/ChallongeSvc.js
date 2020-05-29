@@ -52,8 +52,13 @@ class ChallongeSvc {
         return listMatches;
     }
 
+    // Todo: Se debe crear un tournament y de esta forma incluir participantes y matches
+    async getTournament(tournamentId, include_participants = 0, include_matches = 0){
+
+    }
+
     async getParticipant(tournamentId, participantId) {
-        const redisKey = "participant_tId="+tournamentId+",part_Id="+participantId;
+        const redisKey = "tournament_id="+tournamentId+",part_Id="+participantId;
         let existsCache = await redisFactory.exists(redisKey);
         let participant = null;
         if(this.CACHE && existsCache){
@@ -92,35 +97,37 @@ class ChallongeSvc {
             var matches = [];
             for (let i = 0; i < response.data.length; i++){
                 const fullMatch = response.data[i].match;
-                const matchNumber = fullMatch.suggested_play_order;
-                const player1 = await this.getParticipant(tournamentId, fullMatch.player1_id);
-                const player2 = await this.getParticipant(tournamentId, fullMatch.player2_id);
-                const matchName = matchNumber + ') ' + player1.name + " VS " + player2.name;
-                var match = {
-                    id: fullMatch.id,
-                    name: matchName,
-                    state: fullMatch.state,
-                    tournament: {
-                        id: fullMatch.tournament_id
-                    },
-                    players: {
-                        player1: player1,
-                        player2: player2,
-                    },
-                    results: {
-                        winner_id: fullMatch.winner_id,
-                        loser_id: fullMatch.loser_id,
-                        scores: fullMatch.scores_csv,
-                    },
-                    created_at: fullMatch.created_at,
-                    round: fullMatch.round,
-                    group_id: fullMatch.group_id,
-                    matchNumber: fullMatch.suggested_play_order,
-                    matchIdentifier: fullMatch.identifier,
-                };
-                console.log(match);
-                matches.push(match);
-            //}); 
+                const state = fullMatch.state;
+                if ( state != 'pending' && fullMatch.player1_id && fullMatch.player2_id) {
+                    const matchNumber = fullMatch.suggested_play_order;
+                    const player1 = await this.getParticipant(tournamentId, fullMatch.player1_id);
+                    const player2 = await this.getParticipant(tournamentId, fullMatch.player2_id);
+                    const matchName = matchNumber + ') ' + player1.name + " VS " + player2.name;
+                    var match = {
+                        id: fullMatch.id,
+                        name: matchName,
+                        state: state,
+                        tournament: {
+                            id: fullMatch.tournament_id
+                        },
+                        players: {
+                            player1: player1,
+                            player2: player2,
+                        },
+                        results: {
+                            winner_id: fullMatch.winner_id,
+                            loser_id: fullMatch.loser_id,
+                            scores: fullMatch.scores_csv,
+                        },
+                        created_at: fullMatch.created_at,
+                        round: fullMatch.round,
+                        group_id: fullMatch.group_id,
+                        matchNumber: fullMatch.suggested_play_order,
+                        matchIdentifier: fullMatch.identifier,        
+                    };
+                    console.log(match);
+                    matches.push(match);
+                }
             }
             console.log(matches, 'matches');
             return (matches);
