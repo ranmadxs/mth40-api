@@ -63,6 +63,7 @@ class ChallongeSvc {
             redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
             tournament = JSON.parse(valueRedis);
         } else{
+            logger.debug("get participant from API");
             var api_key = mth40.properties.challonge.api_key;
             var session_url = mth40.properties.challonge.base_url 
                 + '/tournaments/'+tournamentId 
@@ -95,6 +96,8 @@ class ChallongeSvc {
                     }
                     return tournament;
             });
+            await redisFactory.set(redisKey, JSON.stringify(tournament));
+            redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
         }
         return tournament;
     }
