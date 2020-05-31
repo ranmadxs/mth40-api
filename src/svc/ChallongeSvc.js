@@ -9,7 +9,7 @@ class ChallongeSvc {
 
     constructor() {
         if(! ChallongeSvc.instance) {
-            this.CACHE = false;
+            this.CACHE = true;
             ChallongeSvc.instance = this;
             logger.debug("Challonge SVC", "[SVC_INSTANCE]");
         }
@@ -72,21 +72,27 @@ class ChallongeSvc {
             tournament = await axios.get(session_url)
                 .then(response => {
                     const fullTournament = response.data.tournament;
-                    /*
-                    let matches = [];
-                    fullTournament.matches.forEach(match => {
-                        const state = match.state;
-
-                        if()
-                    });
-                    */
                     let matches = fullTournament.matches;
                     let participants = fullTournament.participants;
-                    var tournament = challongeUtils.formatTournamet(fullTournament);
-//                    matches: matches,
-//                    participants: participants,
-
-                    console.log(tournament, 'tournament');
+                    var tournament = challongeUtils.formatTournament(fullTournament);
+                    let tournamentMatches = [];
+                    if( matches ) {
+                        matches.forEach( ({match}) => {
+                            if ( match.state != 'pending'
+                                && match.player1_id && match.player2_id) {
+                                let player1 =participants.filter(({participant}) =>
+                                    participant.id == match.player1_id);
+                                let player2 =participants.filter(({participant}) =>
+                                    participant.id == match.player2_id);
+                                player1 = challongeUtils.formatParticipant(player1[0].participant);
+                                player2 = challongeUtils.formatParticipant(player2[0].participant);
+                                let matchTournament = challongeUtils
+                                    .formatMatch(match, player1, player2);
+                                tournamentMatches.push(matchTournament);
+                            }
+                        });
+                        tournament.matches = tournamentMatches;
+                    }
                     return tournament;
             });
         }
@@ -109,17 +115,7 @@ class ChallongeSvc {
                 + '/tournaments/'+tournamentId+'/participants/'+participantId+'.json?api_key='+api_key;
             participant = await axios.get(session_url)
                 .then(response => {
-                    //console.log(response.data.participant, 'participant');                    
-                    var participant = {
-                        id: response.data.participant.id,
-                        name: response.data.participant.name,
-                        seed: response.data.participant.seed,
-                        created_at: response.data.participant.created_at,
-                        final_rank: response.data.participant.final_rank,
-                        tournament_id: response.data.participant.tournament_id,
-                        
-                    };                    
-                    return participant;
+                    return challongeUtils.formatParticipant(response.data.participant);;
             });
             await redisFactory.set(redisKey, JSON.stringify(participant));
             redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
@@ -140,30 +136,7 @@ class ChallongeSvc {
                     const matchNumber = fullMatch.suggested_play_order;
                     const player1 = await this.getParticipant(tournamentId, fullMatch.player1_id);
                     const player2 = await this.getParticipant(tournamentId, fullMatch.player2_id);
-                    const matchName = matchNumber + ') ' + player1.name + " VS " + player2.name;
-                    var match = {
-                        id: fullMatch.id,
-                        name: matchName,
-                        state: state,
-                        tournament: {
-                            id: fullMatch.tournament_id
-                        },
-                        players: {
-                            player1: player1,
-                            player2: player2,
-                        },
-                        results: {
-                            winner_id: fullMatch.winner_id,
-                            loser_id: fullMatch.loser_id,
-                            scores: fullMatch.scores_csv,
-                        },
-                        created_at: fullMatch.created_at,
-                        round: fullMatch.round,
-                        group_id: fullMatch.group_id,
-                        matchNumber: fullMatch.suggested_play_order,
-                        matchIdentifier: fullMatch.identifier,        
-                    };
-                    matches.push(match);
+                    matches.push(challongeUtils.formatMatch(fullMatch, player1, player2));
                 }
             }
             return (matches);
@@ -231,7 +204,7 @@ class ChallongeSvc {
             var tournaments = [];
             response.data.forEach(element => {
                 var fullTournament = element.tournament;
-                var tournament = challongeUtils.formatTournamet(fullTournament);
+                var tournament = challongeUtils.formatTournament(fullTournament);
                 tournaments.push(tournament);
             }); 
             return (tournaments);

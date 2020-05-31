@@ -10,7 +10,6 @@ router.get('/tournaments', function (req, res) {
     var promisedResult = challongeSvc.tournaments();
 
     promisedResult.then(function (result) {
-        logger.info(result);
         res.end(JSON.stringify(result));
     });    
 });
