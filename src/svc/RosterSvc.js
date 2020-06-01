@@ -85,18 +85,10 @@ class RosterSvc {
 
     async saveRoster(rosterJSON){       
         logger.debug(rosterJSON.name, "[INIT_SAVE]");
-        rosterJSON.status = "SAVED";
         rosterJSON.updateAt = new Date();
         await Roster.model.updateOne({ name: rosterJSON.name, },
-            {
-                $set: {
-                    ... rosterJSON
-                  },
-                $inc: { __v: 1 }
-            },
-            rosterJSON).
+            { $set: { ... rosterJSON }, $inc: { __v: 1 } }, rosterJSON).
             then(async (result) => {
-                logger.debug(result, 'result');
                 if (result.n === 0) {
                     logger.warn(result, 'No se ha encontrado el roster');
                     let roster = new Roster.model(rosterJSON);
@@ -105,9 +97,10 @@ class RosterSvc {
                 } else{
                     let ids = await Roster.model.find({ name: rosterJSON.name,}, '_id');
                     rosterJSON.id = ids[0]._id;             
-                }           
-        });
-        logger.info(`(${rosterJSON.id}) ${rosterJSON.name}`, "SaveRoster [OK]");        
+                }
+            });
+        logger.info(`(${rosterJSON.id}) ${rosterJSON.name}`, "SaveRoster [OK]");
+        rosterJSON.status = "SAVED";
         return rosterJSON;        
     }
     async validateRoster(roster){

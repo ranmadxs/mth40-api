@@ -10,7 +10,7 @@ var rosterSchema = new mongoose.Schema({
     costs: CostSchema.schema ,
     gameSystemName: { type: String, trim: true },
     gameSystemRevision: { type: String, trim: true },
-    tournaments: [],
+    tournaments: { type: Object },
     mainFaction: { type: String, trim: true },
     conferenceName: { type: String, trim: true },
     teamOwner: { type: String, trim: true },
@@ -18,12 +18,8 @@ var rosterSchema = new mongoose.Schema({
     updateAt: {type: Date, default: Date.now}
 });
 
-/*
-rosterSchema.pre('updateOne', function( next ) {
-    console.log(this.__v, 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxx');
-    this.update({}, { $inc: { __v: 1 } }, next );
-});
-*/
+rosterSchema.index({ name: 1 }, { unique: true });
+
 const model = mongoose.model('Roster', rosterSchema);
 
 module.exports = {

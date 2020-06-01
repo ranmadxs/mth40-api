@@ -23,23 +23,32 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
         return value;
     });        
     let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
-    //rosterSvc.saveFile(req.file, roster);
+    rosterSvc.saveFile(req.file, roster);
     //Save roster tournament
     if (roster.tournaments && roster.tournaments.selected
         && roster.tournaments.participant && roster.id
         && roster.tournaments.participant.selected) {
-        const rosterTournament = {
-            tournament: {
-                id: roster.tournaments.selected
-            },
-            participantId: roster.tournaments.participant.selected,
-            roster: {
-                id: roster.id,
-                name: roster.name,
+        const selectedTournament = roster.tournaments.suggestions.filter(
+            suggestion => suggestion.id == roster.tournaments.selected);
+        const selectedParticipant = roster.tournaments.participant.suggestions.filter(
+                participant => participant.id == roster.tournaments.participant.selected);
+    
+        if (selectedTournament && selectedTournament.length > 0
+            && selectedParticipant && selectedParticipant.length > 0){
+            const rosterTournament = {
+                tournament: selectedTournament[0],
+                participant: selectedParticipant[0],
+                roster: {
+                    id: roster.id,
+                    name: roster.name,
+                    teamOwner: roster.teamOwner,
+                    conferenceName: roster.conferenceName,
+                    mainFaction: roster.mainFaction,
+                }
             }
+            logger.debug(rosterTournament, 'rosterTournament');
+            rosterTorunamentSvc.save(rosterTournament);
         }
-        logger.debug(rosterTournament, 'rosterTournament');
-        //rosterTournament.save(rosterTournament);
     }
     res.writeHead(200, {'Content-Type': 'application/json'});
     delete roster._id;
