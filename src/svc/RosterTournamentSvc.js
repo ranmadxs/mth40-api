@@ -10,6 +10,15 @@ class RosterTournamentSvc {
         return RosterTournamentSvc.instance;     
     }
 
+    async get (tournamentId, participantId) {
+        let rosterTournament = await RosterTournament.model.find({ 
+            'tournament.id': tournamentId,
+            'participant.id': participantId,
+        });
+        return rosterTournament;
+    }
+
+
     async save (rtour) {
         rtour.updateAt = new Date();
         await RosterTournament.model.updateOne({ 
