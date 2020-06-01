@@ -4,6 +4,7 @@ const logger = require('../../LogConfig');
 var multer = require('multer');
 var upload = multer();
 const rosterSvc =  require('../svc/RosterSvc');
+const rosterTorunamentSvc = require('../svc/RosterTournamentSvc');
 fs = require('fs');
 var path = require('path');
 global.appRoot = path.resolve(__dirname);
@@ -20,10 +21,26 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
         }
     
         return value;
-    });    
-
+    });        
     let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
-    rosterSvc.saveFile(req.file, roster);
+    //rosterSvc.saveFile(req.file, roster);
+    //Save roster tournament
+    if (roster.tournaments && roster.tournaments.selected
+        && roster.tournaments.participant && roster.id
+        && roster.tournaments.participant.selected) {
+        const rosterTournament = {
+            tournament: {
+                id: roster.tournaments.selected
+            },
+            participantId: roster.tournaments.participant.selected,
+            roster: {
+                id: roster.id,
+                name: roster.name,
+            }
+        }
+        logger.debug(rosterTournament, 'rosterTournament');
+        //rosterTournament.save(rosterTournament);
+    }
     res.writeHead(200, {'Content-Type': 'application/json'});
     delete roster._id;
     res.end(JSON.stringify(roster));    
