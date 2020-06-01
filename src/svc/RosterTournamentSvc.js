@@ -12,8 +12,8 @@ class RosterTournamentSvc {
 
     async get (tournamentId, participantId) {
         let rosterTournament = await RosterTournament.model.find({
-            'tournament.id': tournamentId,
-            'participant.id': participantId,
+            'tournament.id': parseInt(tournamentId),
+            'participant.id': parseInt(participantId),
         });
         return rosterTournament;
     }
