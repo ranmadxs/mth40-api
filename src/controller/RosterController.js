@@ -12,14 +12,11 @@ global.appRoot = path.resolve(__dirname);
 logger.info("Roster Controller", "[CTRL_INIT]");
 
 router.post('/save', upload.single("roster_file"), async (req, res) => {
-    logger.debug(req.route);
     logger.debug(req.file.originalname, 'fileName');
-    //logger.debug(req.body.roster_json, 'roster');    
     var jsonStr = JSON.stringify( JSON.parse(req.body.roster_json), function( key, value ) {
         if( key === "$$hashKey" ) {
             return undefined;
-        }
-    
+        }    
         return value;
     });        
     let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
@@ -56,10 +53,7 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
 });
 
 router.post('/findParticipant', function(req, res) {
-    //logger.debug(req.route);
-    //logger.debug(req.body.roster_json);
     rosterSvc.suggestionParticipant(JSON.parse(req.body.roster_json)).then(result => {
-        //logger.debug(result);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(result));
     });    
@@ -67,10 +61,7 @@ router.post('/findParticipant', function(req, res) {
 });
 
 router.post('/validate', function(req, res) {
-    //logger.debug(req.route);
-    //logger.debug(req.body.roster_json);
     rosterSvc.validateRoster(JSON.parse(req.body.roster_json)).then(result => {
-        //logger.debug(result);
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(result));
     });    
@@ -80,6 +71,22 @@ router.post('/validate', function(req, res) {
 router.get('/list', async (req, res) => {
     const projections = req.query.projections || null;
     const result = await rosterSvc.listRosters(projections); 
+    res.writeHead(200, {'Content-Type': 'application/json'});
+    res.end(JSON.stringify(result));
+});
+
+router.get('/rtournament', async (req, res) => {
+    const tournamentId = req.query.tournamentId || null;
+    if(tournamentId == null) {
+        res.writeHead(400, {'Content-Type': 'text/plain'});
+        res.end('tournament Id required');    
+    }
+    const participantId = req.query.participantId || null;
+    if(participantId == null) {
+        res.writeHead(400, {'Content-Type': 'text/plain'});
+        res.end('participantId required');    
+    }        
+    const result = await rosterTorunamentSvc.get(tournamentId, participantId);
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(JSON.stringify(result));
 });

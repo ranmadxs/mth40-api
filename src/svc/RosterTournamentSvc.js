@@ -7,11 +7,11 @@ class RosterTournamentSvc {
             RosterTournamentSvc.instance = this;
             logger.debug("RosterTournament SVC", "[SVC_INSTANCE]");
         }
-        return RosterTournamentSvc.instance;     
+        return RosterTournamentSvc.instance;
     }
 
     async get (tournamentId, participantId) {
-        let rosterTournament = await RosterTournament.model.find({ 
+        let rosterTournament = await RosterTournament.model.find({
             'tournament.id': tournamentId,
             'participant.id': participantId,
         });
@@ -34,17 +34,8 @@ class RosterTournamentSvc {
                 });
             }
         });
-        return rtour;        
-
-
+        return rtour;
     }
-
-    /*
-    async exist (rosterTournamentJson) {
-
-    }
-    */
-
 }
 
 const instance = new RosterTournamentSvc();
