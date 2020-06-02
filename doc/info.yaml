@@ -1,7 +1,7 @@
-version: "1.0.0-oas3"
+version: "${version}"
 title: WH40K API
 contact:
   email: grineldosanchez@yahoo.es
   name: Admin
   url: 'http://relatosdelaherejia.cl'
-description: Api de servicio WH40K. Para torneos OT500
+description: Api de servicio WH40K (Challonge, Wahapedia, BattleScribe)

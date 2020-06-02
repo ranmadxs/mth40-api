@@ -1,0 +1,32 @@
+get:
+    tags:
+        - roster-api
+    summary: Obtiene un roster Tournament Obj
+    operationId: getRosterTournament
+    description: |
+        Obtiene el rouster tournament por tournamentId y participantId.
+    parameters:
+        - name: tournamentId
+          in: query
+          description: Challonge Tournament Id
+          required: true
+          schema:
+            type: integer
+            default: 7968393
+        - name: participantId
+          in: query
+          description: Challonge Participant Id
+          required: true
+          schema:
+            type: integer
+            default: 112433886
+    responses:
+        '200':
+          description: Resultado Tournament
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+        '400':
+          description: Mala petición

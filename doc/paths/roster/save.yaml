@@ -1,0 +1,36 @@
+post:
+    tags:
+      - roster-api
+    summary: Save Roster
+    description: Guarda el Roster de Battlescribe en Mongodb
+    operationId: saveRoster
+    responses:
+      '200':
+        description: 'Resultado de la lista de tournaments[]'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Roster'
+      '400':
+        description: Mala petición
+    requestBody:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              roster_json:
+                description: Json Roster here.
+                type: string
+                default: >-
+                  {status:'VALIDATE', name:'Astra Millitarum-OT500-Primaris
+                  Psyker'}
+              roster_file:
+                description: File Roster here. (ros extension)
+                type: string
+                format: binary
+            required:
+              - roster_json
+              - roster_file

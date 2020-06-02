@@ -1,0 +1,39 @@
+get:
+    tags:
+      - challonge-api
+    summary: Obtiene un torneo de Challonge
+    operationId: getTournament
+    description: |
+      Obtiene el Torneo de Challonge, opcionales los participantes y partidas.
+    parameters:
+      - name: tournamentId
+        in: query
+        description: Challonge Tournament Id
+        required: true
+        schema:
+          type: integer
+          default: 7968317
+      - name: include_participants
+        in: query
+        description: Include Participants Flag
+        required: false
+        schema:
+          type: integer
+          default: 1
+      - name: include_matches
+        in: query
+        description: Include Matches Flag
+        required: false
+        schema:
+          type: integer
+          default: 1
+    responses:
+      '200':
+        description: Resultado Tournament
+        content:
+          application/json:
+            schema:
+              type: array
+              items: {}
+      '400':
+        description: Mala petición

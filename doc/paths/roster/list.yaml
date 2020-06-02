@@ -1,0 +1,25 @@
+get:
+    tags:
+      - roster-api
+    summary: List Rosters
+    description: Entrega la lista de rosters que hay en la base de datos
+    operationId: listRosters
+    parameters:
+      - name: projections
+        in: query
+        description: Projections fields separate by space
+        required: false
+        schema:
+          type: string
+          default: name teamOwner status
+    responses:
+      '200':
+        description: 'Resultado de la lista de rosters[]'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Roster'
+      '400':
+        description: Mala petición

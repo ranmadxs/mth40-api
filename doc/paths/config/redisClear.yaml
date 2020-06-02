@@ -1,0 +1,15 @@
+get:
+    tags:
+      - config-api
+    summary: Borra la cache de redis completa
+    operationId: flushall
+    description: Elimina todas las keys de Redis
+    responses:
+      '200':
+        description: Resultado operación Redis Flushall
+        content:
+          application/json:
+            schema:
+              type: string
+      '400':
+        description: Mala petición

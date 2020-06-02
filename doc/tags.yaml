@@ -1,0 +1,10 @@
+- name: roster-api
+  description: All Roster Battlescribe Services
+- name: challonge-api
+  description: Servicios de challonge API para torneos
+- name: army-api
+  description: 'Army, Factions, SubFactions API'
+- name: wahapedia-api
+  description: 'Warhammer 40K Information, Factions, Rules, Stratagems'
+- name: config-api
+  description: 'Config wh40 api, like Redis and others'

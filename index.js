@@ -4,11 +4,10 @@ const express = require('express');
 const app = express();
 var logger = require('./LogConfig');
 var cors = require('cors');
-var swaggerUi = require('swagger-ui-express');
+/***** LIbs Swagger *******/
 var YAML = require('yamljs');
-var swaggerDocument = YAML.load('./doc/swagger.yaml');
-
-// var swaggerDocument = require('./swagger.yml');
+var swaggerUi = require('swagger-ui-express');
+//var swaggerDocument = YAML.load('./doc/swagger.yaml');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
@@ -21,6 +20,7 @@ var configController = require('./src/controller/ConfigController');
 var challongeController = require('./src/controller/ChallongeController');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
 //var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
+var loadSwagger = require('./loadSwagger');
 
 const factionSvc = require('./src/svc/FactionSvc');
 logger.debug (mth40);
@@ -52,11 +52,17 @@ app.use('/wahapedia', wahapediaController);
 app.use('/config', configController);
 app.use('/challonge', challongeController);
 
-app.listen(mth40.config.PORT, function () {
+
+app.listen(mth40.config.PORT, async () => {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);
+    const docSample = await loadSwagger.load('./doc/index.yaml');
+    const swaggerDocument = YAML.parse(docSample);
     const mongoPromised = mongoFactory.connect();
     //const mysqlPromised = mysqlFactory.connect();
     const redisPromised = redisFactory.connect();
+
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
     Promise.all([mongoPromised, redisPromised]).then(respVal => {
         console.log("********************************************************");
         console.log(respVal);
@@ -66,5 +72,3 @@ app.listen(mth40.config.PORT, function () {
         logger.error(reason);
     });    
 });
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

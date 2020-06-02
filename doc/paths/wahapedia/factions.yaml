@@ -1,0 +1,16 @@
+get:
+    tags:
+      - wahapedia-api
+    summary: Lista de Facciones y SubFacciones
+    operationId: getFactions
+    description: |
+      Obtiene la lista de Facciones y SubFacciones en Wahapedia.
+    responses:
+      '200':
+        description: Resultado de exec del servicio
+        content:
+          application/json:
+            schema:
+              type: string
+      '400':
+        description: Mala petición

@@ -1,0 +1,53 @@
+schemas:
+    Faction:
+      type: object
+      properties:
+        name:
+          type: string
+        url:
+          type: string
+    Roster:
+      type: object
+      properties:
+        name:
+          type: string
+    Army:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Xenos
+        code:
+          type: string
+          example: XEN
+        factions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Faction'
+    tournament:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 7968393
+        name:
+          type: string
+          example: '[ELI] Adeptus Astartes {OT500-V01}'
+        url:
+          type: string
+        tournament_type:
+          type: string
+        game_name:
+          type: string
+        state:
+          type: string
+        event_id:
+          type: integer
+          example: 27010
+        started_at:
+          type: string
+        completed_at:
+          type: string

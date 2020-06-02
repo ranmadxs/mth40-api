@@ -1,0 +1,18 @@
+get:
+    tags:
+      - army-api
+    summary: Lista de Armadas
+    operationId: listArmy
+    description: |
+      Obtiene la lista de Armadas en MTH40k DB.
+    responses:
+      '200':
+        description: 'Resultado de la lista de Army[]'
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Army'
+      '400':
+        description: Mala petición

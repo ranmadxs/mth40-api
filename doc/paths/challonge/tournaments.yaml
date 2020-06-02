@@ -1,0 +1,18 @@
+get:
+  tags:
+    - challonge-api
+  summary: Lista de Torneos
+  operationId: listTournaments
+  description: |
+    Obtiene la lista de Torneos en Challonge.
+  responses:
+    '200':
+      description: 'Resultado de la lista de tournaments[]'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/tournament'
+    '400':
+      description: Mala petición

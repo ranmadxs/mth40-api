@@ -1,6 +1,6 @@
 {
     "name": "wh40-api",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "API Universo WH40K",
     "keywords": [
         "node.js",
@@ -33,6 +33,7 @@
         "express": "^4.16.4",
         "express-form-data": "^2.0.12",
         "js-yaml": "^3.13.1",
+        "json-refs": "^3.0.15",
         "log4js": "^6.1.2",
         "log4js-extend": "^0.2.1",
         "method-override": "^3.0.0",

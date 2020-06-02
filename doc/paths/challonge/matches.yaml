@@ -1,0 +1,25 @@
+get:
+    tags:
+      - challonge-api
+    summary: Lista de Partidas
+    operationId: listMatches
+    description: |
+      Obtiene la lista de Juegos por TournamentId en Challonge.
+    parameters:
+      - name: tournamentId
+        in: query
+        description: Challonge Tournament Id
+        required: true
+        schema:
+          type: integer
+          default: 7968317
+    responses:
+      '200':
+        description: 'Resultado de la lista de matches[]'
+        content:
+          application/json:
+            schema:
+              type: array
+              items: {}
+      '400':
+        description: Mala petición

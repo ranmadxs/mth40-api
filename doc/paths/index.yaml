@@ -1,0 +1,20 @@
+/roster/save:
+  $ref: ./roster/save.yaml
+/roster/rtournament:
+  $ref: ./roster/rtournament.yaml
+/roster/list:
+  $ref: ./roster/list.yaml
+/roster/validate:
+  $ref: ./roster/validate.yaml
+/wahapedia/factions:
+  $ref: ./wahapedia/factions.yaml
+/config/redis/clear:
+  $ref: ./config/redisClear.yaml
+/challonge/tournaments:
+  $ref: ./challonge/tournaments.yaml
+/challonge/matches:
+  $ref: ./challonge/matches.yaml
+/challonge/tournament:
+  $ref: ./challonge/tournament.yaml
+/army/list:
+  $ref: ./army/list.yaml
