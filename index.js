@@ -18,6 +18,7 @@ var rosterController = require('./src/controller/RosterController');
 var wahapediaController = require('./src/controller/WahapediaController');
 var configController = require('./src/controller/ConfigController');
 var challongeController = require('./src/controller/ChallongeController');
+var tournamentController = require('./src/controller/TournamentController');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
 //var mysqlFactory = require('./src/factories/MySQLConnectionFactory');
 var loadSwagger = require('./loadSwagger');
@@ -51,7 +52,7 @@ app.use('/roster', rosterController);
 app.use('/wahapedia', wahapediaController);
 app.use('/config', configController);
 app.use('/challonge', challongeController);
-
+app.use('/tournament', tournamentController);
 
 app.listen(mth40.config.PORT, async () => {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);

@@ -1,10 +1,10 @@
 get:
     tags:
-        - roster-api
-    summary: Obtiene un roster Tournament Obj
+        - tournament-api
+    summary: Obtiene un Roster Tournament Obj
     operationId: getRosterTournament
     description: |
-        Obtiene el rouster tournament por tournamentId y participantId.
+        Obtiene el Roster (Battlescribe) Tournament (Challonge) por tournamentId y participantId.
     parameters:
         - name: tournamentId
           in: query
@@ -22,11 +22,11 @@ get:
             default: 112433886
     responses:
         '200':
-          description: Resultado Tournament
+          description: Resultado Tournament Roster
           content:
             application/json:
               schema:
-                type: array
+                type: object
                 items: {}
         '400':
           description: Mala petición

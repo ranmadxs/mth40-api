@@ -75,20 +75,4 @@ router.get('/list', async (req, res) => {
     res.end(JSON.stringify(result));
 });
 
-router.get('/rtournament', async (req, res) => {
-    const tournamentId = req.query.tournamentId || null;
-    if(tournamentId == null) {
-        res.writeHead(400, {'Content-Type': 'text/plain'});
-        res.end('tournament Id required');    
-    }
-    const participantId = req.query.participantId || null;
-    if(participantId == null) {
-        res.writeHead(400, {'Content-Type': 'text/plain'});
-        res.end('participantId required');    
-    }        
-    const result = await rosterTorunamentSvc.get(tournamentId, participantId);
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify(result));
-});
-
 module.exports = router;

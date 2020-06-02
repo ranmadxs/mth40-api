@@ -1,0 +1,39 @@
+get:
+    tags:
+        - tournament-api
+    summary: Obtiene un Roster Tournament (Match) para dos players
+    operationId: tmatch
+    description: |
+        Obtiene el Roster (Battlescribe) Tournament (Challonge) para dos players por tournamentId y participantId.
+    parameters:
+        - name: tournamentId
+          in: query
+          description: Challonge Tournament Id
+          required: true
+          schema:
+            type: integer
+            default: 7968393
+        - name: idPlayer1
+          in: query
+          description: Challonge Participant Id 1
+          required: false
+          schema:
+            type: integer
+            default: 112433886
+        - name: idPlayer2
+          in: query
+          description: Challonge Participant Id 2
+          required: false
+          schema:
+            type: integer
+            default: 112433886  
+    responses:
+        '200':
+          description: Resultado Array Tournament Roster
+          content:
+            application/json:
+              schema:
+                type: array
+                items: []
+        '400':
+          description: Mala petición

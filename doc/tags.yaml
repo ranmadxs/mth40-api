@@ -1,5 +1,7 @@
 - name: roster-api
   description: All Roster Battlescribe Services
+- name: tournament-api
+  description: All Tournament (Challonge) and Roster (Battlescribe) relations
 - name: challonge-api
   description: Servicios de challonge API para torneos
 - name: army-api

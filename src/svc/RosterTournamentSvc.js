@@ -15,7 +15,7 @@ class RosterTournamentSvc {
             'tournament.id': parseInt(tournamentId),
             'participant.id': parseInt(participantId),
         });
-        return rosterTournament;
+        return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
     }
 
 

@@ -1,11 +1,13 @@
 /roster/save:
   $ref: ./roster/save.yaml
-/roster/rtournament:
-  $ref: ./roster/rtournament.yaml
 /roster/list:
   $ref: ./roster/list.yaml
 /roster/validate:
   $ref: ./roster/validate.yaml
+/tournament/troster:
+  $ref: ./tournament/troster.yaml  
+/tournament/tmatch:
+  $ref: ./tournament/tmatch.yaml    
 /wahapedia/factions:
   $ref: ./wahapedia/factions.yaml
 /config/redis/clear:
