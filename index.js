@@ -5,7 +5,10 @@ const app = express();
 var logger = require('./LogConfig');
 var cors = require('cors');
 var swaggerUi = require('swagger-ui-express');
-var swaggerDocument = require('./swagger.json');
+var YAML = require('yamljs');
+var swaggerDocument = YAML.load('./doc/swagger.yaml');
+
+// var swaggerDocument = require('./swagger.yml');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var upload = multer();
@@ -54,7 +57,7 @@ app.listen(mth40.config.PORT, function () {
     const mongoPromised = mongoFactory.connect();
     //const mysqlPromised = mysqlFactory.connect();
     const redisPromised = redisFactory.connect();
-    Promise.all([mongoPromised, redisPromised]).then(respVal => {        
+    Promise.all([mongoPromised, redisPromised]).then(respVal => {
         console.log("********************************************************");
         console.log(respVal);
         console.log('************* Server running on port ' + mth40.config.PORT + " **************");
