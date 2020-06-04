@@ -27,7 +27,7 @@ class RosterTournamentSvc {
         }, { $set: { ... rtour }, $inc: { __v: 1 } },
         rtour).then(async (result) => {
             if (result.n === 0) {
-                logger.warn(result, 'No se ha encontrado el roster tournament');
+                logger.warn(rtour.tournament.id, 'No se ha encontrado el roster tournament');
                 let rosterTour = new RosterTournament.model(rtour);
                 await rosterTour.save(function (err) {
                     if (err) logger.error (err, "Error Save RosterTournament")

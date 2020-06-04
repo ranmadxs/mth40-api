@@ -20,7 +20,7 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
         return value;
     });        
     let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
-    rosterSvc.saveFile(req.file, roster);
+    //rosterSvc.saveFile(req.file, roster);
     //Save roster tournament
     if (roster.tournaments && roster.tournaments.selected
         && roster.tournaments.participant && roster.id
