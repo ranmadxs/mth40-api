@@ -18,7 +18,6 @@ class RosterTournamentSvc {
         return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
     }
 
-
     async save (rtour) {
         rtour.updateAt = new Date();
         await RosterTournament.model.updateOne({ 

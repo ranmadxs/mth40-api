@@ -4,6 +4,8 @@
   $ref: ./roster/list.yaml
 /roster/validate:
   $ref: ./roster/validate.yaml
+/match/find/{matchId}/{tournamentId}:
+  $ref: ./match/find.yaml 
 /tournament/troster:
   $ref: ./tournament/troster.yaml  
 /tournament/tmatch:

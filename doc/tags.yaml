@@ -1,3 +1,5 @@
+- name: match-api
+  description: Match API
 - name: roster-api
   description: All Roster Battlescribe Services
 - name: tournament-api

@@ -31,7 +31,7 @@ class TournamentSvc {
           if (err) logger.error (err, "Error Save Tournament")
         });
       } else {
-        logger.warn('Se está modificando el Tournament:', tournament.id);
+        logger.info('Se está modificando el Tournament:', tournament.id);
       }
     });
     return tournament;

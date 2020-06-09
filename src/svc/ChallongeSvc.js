@@ -78,6 +78,7 @@ class ChallongeSvc {
                     let participants = fullTournament.participants;
                     var tournament = challongeUtils.formatTournament(fullTournament);
                     logger.debug(tournament, 'pre-tournament');
+                    tournament.participants = participants;
                     tournamentSvc.save(tournament);
                     logger.debug(tournament, 'post-tournament');
                     let tournamentMatches = [];
