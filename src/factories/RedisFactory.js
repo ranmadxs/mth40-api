@@ -2,6 +2,8 @@ const redis = require("async-redis");
 var logger = require('../../LogConfig');
 var mth40 = require ('../configs');
 
+//TODO: Dinamizar la URL de Redis con la api de redis y el siguiente comando:
+//heroku redis:credentials REDIS_URL --app=challonge-redis
 class RedisFactory {
 
     constructor(){
