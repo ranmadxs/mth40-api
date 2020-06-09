@@ -1,5 +1,6 @@
 var mongoose = require ("mongoose");
 
+
 var rosterTournamentSchema = new mongoose.Schema({
     bussinesKey: {type: String, required: false },
     tournament: { type: Object, required: true },

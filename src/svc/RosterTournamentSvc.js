@@ -1,5 +1,5 @@
 var logger = require('../../LogConfig');
-var RosterTournament = require ('../schemas/RosterTournament');
+var RosterTournament = require ('../schemas/RosterTournamentSchema');
 
 class RosterTournamentSvc {
     constructor() {

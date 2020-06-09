@@ -4,12 +4,13 @@ var redisFactory = require('../factories/RedisFactory');
 var logger = require('../../LogConfig');
 var mth40 = require ('../configs');
 var challongeUtils = require ('../utils/ChallongeUtils');
+var tournamentSvc = require('./TournamentSvc');
 
 class ChallongeSvc {
 
     constructor() {
         if(! ChallongeSvc.instance) {
-            this.CACHE = true;
+            this.CACHE = false;
             ChallongeSvc.instance = this;
             logger.debug("Challonge SVC", "[SVC_INSTANCE]");
         }
@@ -76,6 +77,9 @@ class ChallongeSvc {
                     let matches = fullTournament.matches;
                     let participants = fullTournament.participants;
                     var tournament = challongeUtils.formatTournament(fullTournament);
+                    logger.debug(tournament, 'pre-tournament');
+                    tournamentSvc.save(tournament);
+                    logger.debug(tournament, 'post-tournament');
                     let tournamentMatches = [];
                     if( matches ) {
                         matches.forEach( ({match}) => {
