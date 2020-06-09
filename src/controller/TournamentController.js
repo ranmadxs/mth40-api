@@ -4,29 +4,37 @@ const logger = require('../../LogConfig');
 const { check, buildCheckFunction, validationResult } = require('express-validator');
 const checkQuery = buildCheckFunction(['query']);
 const rosterTorunamentSvc = require('../svc/RosterTournamentSvc');
+const matchSvc = require('../svc/MatchSvc');
 
 logger.info("Tournament Controller", "[CTRL_INIT]");
 
 router.get('/tmatch', [
         checkQuery('tournamentId').isNumeric(),
-        checkQuery('idPlayer1').isNumeric(),
-        checkQuery('idPlayer2').isNumeric(),
+        checkQuery('matchId').isNumeric(),
     ], async (req, res) => {        
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
           return res.status(422).json({ errors: errors.array() });
         }
-        const {query: {tournamentId, idPlayer1, idPlayer2}} = req;
-        const player1 = await rosterTorunamentSvc.get(tournamentId, idPlayer1);
-        const player2 = await rosterTorunamentSvc.get(tournamentId, idPlayer2);
-        let tournament = {id: tournamentId};
-        if (player1 && player1.tournament) {
-            tournament = player1.tournament;
-        } else if (player2 && player2.tournament) {
-            tournament = player2.tournament;
+        const {query: {tournamentId, matchId}} = req;
+        const match = await matchSvc.find(tournamentId, matchId);
+        let player1 = null;
+        let player2 = null;
+        if (match.players && match.players.player1 && match.players.player1.id) {
+            player1 = await rosterTorunamentSvc.get(tournamentId, match.players.player1.id);
+        } 
+        
+        if (match.players && match.players.player2 && match.players.player2.id) {
+            player2 = await rosterTorunamentSvc.get(tournamentId, match.players.player2.id);
         }
         const result = {
-            tournament: tournament,
+            id: matchId,
+            name: match.name,
+            state: match.state,
+            round: match.round,
+            matchNumber: match.matchNumber,
+            matchIdentifier: match.matchIdentifier,
+            tournament: match.tournament,
             player1: player1,
             player2: player2,
         };

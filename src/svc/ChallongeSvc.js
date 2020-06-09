@@ -10,7 +10,7 @@ class ChallongeSvc {
 
     constructor() {
         if(! ChallongeSvc.instance) {
-            this.CACHE = false;
+            this.CACHE = true;
             ChallongeSvc.instance = this;
             logger.debug("Challonge SVC", "[SVC_INSTANCE]");
         }
@@ -156,11 +156,11 @@ class ChallongeSvc {
         return matches;
     }
 
-    async tournaments(cache = true) {
+    async tournaments() {
         var listTournaments = [];
         
         let existsCache = await redisFactory.exists("tournaments");
-        if(cache && existsCache){      
+        if(this.CACHE && existsCache){      
             logger.debug("get tournaments from cache");     
             const valueRedis = await redisFactory.get("tournaments");
             redisFactory.expire("tournaments", mth40.properties.redis.ttl.challongeTournaments);

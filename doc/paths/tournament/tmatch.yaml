@@ -13,27 +13,20 @@ get:
           schema:
             type: integer
             default: 7968393
-        - name: idPlayer1
+        - name: matchId
           in: query
-          description: Challonge Participant Id 1
-          required: false
+          description: Challonge Match Id
+          required: true
           schema:
             type: integer
-            default: 112433886
-        - name: idPlayer2
-          in: query
-          description: Challonge Participant Id 2
-          required: false
-          schema:
-            type: integer
-            default: 112433886  
+            default: 202526757
     responses:
         '200':
-          description: Resultado Array Tournament Roster
+          description: Resultado Array Tournament roster Match
           content:
             application/json:
               schema:
-                type: array
-                items: []
+                type: object
+                items: {}
         '400':
           description: Mala petición
