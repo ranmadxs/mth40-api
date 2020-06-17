@@ -1,6 +1,6 @@
 {
     "name": "wh40-api",
-    "version": "1.3.1",
+    "version": "1.4.0",
     "description": "API Universo WH40K",
     "keywords": [
         "node.js",

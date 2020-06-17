@@ -14,8 +14,10 @@ const defensiveSubschema = new Schema({
   objetive: { type: Number, default: 0 },
 });
 
+// TODO: crear alias en el roster->forces->unit
 const unitScoreSchema = new mongoose.Schema({
-  unitId: { type: mongoose.Schema.ObjectId },
+  /* el unitId corresponde al id del unit del roster por que son los scores por la unidad de roster () */
+  unitId: { type: String, required: true },
   matchScoreId: {type: mongoose.Schema.ObjectId},
   playerScoreId: {type: mongoose.Schema.ObjectId},
   defensive: defensiveSubschema,

@@ -4,6 +4,7 @@ const logger = require('../../LogConfig');
 var multer = require('multer');
 var upload = multer();
 const rosterSvc =  require('../svc/RosterSvc');
+const unitSvc = require('../svc/UnitSvc');
 const rosterTorunamentSvc = require('../svc/RosterTournamentSvc');
 fs = require('fs');
 var path = require('path');
@@ -46,6 +47,8 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
             logger.debug(rosterTournament, 'rosterTournament');
             rosterTorunamentSvc.save(rosterTournament);
         }
+    } if ( roster.id ) {
+      await unitSvc.updateUnits(roster.id);
     }
     res.writeHead(200, {'Content-Type': 'application/json'});
     delete roster._id;

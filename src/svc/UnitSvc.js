@@ -51,11 +51,10 @@ class UnitSvc {
             factionSvc.updateFactionUnits(rosterArmy.id, rosterArmy.faction.name, factionUnits);
           }
         }        
-        logger.info(armyFaction.factions, 'armyFaction');
+        //logger.info(armyFaction.factions, 'armyFaction');
       }
     }
     
-    //logger.debug(faction, 'faction');
   }  
 }
 

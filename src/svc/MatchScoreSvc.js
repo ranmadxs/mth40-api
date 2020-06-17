@@ -68,7 +68,8 @@ class MatchScoreSvc {
       if(_.isEmpty(rosterTournament) || _.isNaN(rosterTournament._id)) {
         throw new Mth40Error('No se encuentra el rosterTournament', 424, 'MatchScoreError');
       }
-      //await unitSvc.updateUnits(rosterTournament.roster.id);
+      /* Se refuerza la creación de unidades en caso que no existan previamente en el Army */
+      await unitSvc.updateUnits(rosterTournament.roster.id);
       let playerScore = {
         rosterTournament: rosterTournament
       };
