@@ -1,5 +1,7 @@
 var logger = require('../../LogConfig');
 var Tournament = require ('../schemas/TournamentSchema');
+var matchSvc = require('./MatchSvc');
+var rosterTorunamentSvc = require('./RosterTournamentSvc');
 
 class TournamentSvc {
   constructor() {
@@ -17,6 +19,30 @@ class TournamentSvc {
     return tournament && tournament.length > 0?tournament[0]:null;
   }
 
+  async getTMatch(tournamentId, matchId) {
+    const match = await matchSvc.find(tournamentId, matchId);
+    let player1 = null;
+    let player2 = null;
+    if (match.players && match.players.player1 && match.players.player1.id) {
+        player1 = await rosterTorunamentSvc.get(tournamentId, match.players.player1.id);
+    } 
+    
+    if (match.players && match.players.player2 && match.players.player2.id) {
+        player2 = await rosterTorunamentSvc.get(tournamentId, match.players.player2.id);
+    }
+    const result = {
+        id: matchId,
+        name: match.name,
+        state: match.state,
+        round: match.round,
+        matchNumber: match.matchNumber,
+        matchIdentifier: match.matchIdentifier,
+        tournament: match.tournament,
+        player1: player1,
+        player2: player2,
+    };
+    return result;
+  }
 
   async save (tournament) {
     tournament.updateAt = new Date();

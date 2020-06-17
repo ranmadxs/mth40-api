@@ -3,14 +3,22 @@ var Army = require ('../schemas/ArmySchema');
 var async = require("async");
 
 class ArmySvc {
-    constructor() {
-        if(! ArmySvc.instance) {
-            ArmySvc.instance = this;
-            logger.debug("Army SVC", "[SVC_INSTANCE]");
-        }
-        return ArmySvc.instance;     
+  constructor() {
+    if(! ArmySvc.instance) {
+      ArmySvc.instance = this;
+      logger.debug("Army SVC", "[SVC_INSTANCE]");
     }
+    return ArmySvc.instance;     
+  }
     
+  async getArmy (name, projections = null) {
+    let army = await Army.model.find({
+      'name': name,
+    }, projections);
+    return army && army.length > 0?army[0]:null;  
+  }
+
+
     async saveArmy (armyArray) {
         async.mapLimit(armyArray, 10, function(armyJson){
             Army.model.updateOne(
@@ -40,21 +48,6 @@ class ArmySvc {
         return new Promise(function (resolve, reject) {
             resolve( {resp: true});
         });
-        /*
-        return new Promise(function (resolve, reject) {
-            conFactory.getConnection().query("SELECT * FROM `ARMY`", function (err, result, fields) {
-                if (err) throw err;
-                resolve(result.map(({
-                    ID, NAME, CODE
-                  }) => ({
-                    id : ID,
-                    name: NAME,
-                    code: CODE
-                })));
-                //logger.debug(fields);
-            });            
-        });
-        */
     }
 };
 

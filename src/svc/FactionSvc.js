@@ -103,13 +103,24 @@ class FactionSvc {
 
     }
 
-    async find (factionName) {
-        logger.debug("find=" + factionName);
-        const findCond = { "factions.name": factionName };
-        const findFilter = { name: 1, factions: { $elemMatch: { name: {$eq :factionName} } } };
-        const queryObj = await Army.model.findOne(findCond, findFilter);
-        return queryObj;
-    }
+  async updateFactionUnits (armyId, factionName, units) {
+    const updateCond = { 
+      '_id': armyId,
+      "factions.name": factionName 
+    };
+    await Army.model.update(
+      updateCond, {'$set': {
+        'factions.$.units': units
+    }});
+  }
+
+  async find (factionName) {
+    logger.debug("find=" + factionName);
+    const findCond = { "factions.name": factionName };
+    const findFilter = { name: 1, factions: { $elemMatch: { name: {$eq :factionName} } } };
+    const queryObj = await Army.model.findOne(findCond, findFilter);
+    return queryObj;
+  }
 };
 
 const instance = new FactionSvc();

@@ -1,53 +1,82 @@
 var logger = require('../../LogConfig');
 const challongeSvc =  require('./ChallongeSvc');
 const factionSvc = require('./FactionSvc');
-const unitSvc = require('./UnitSvc');
 var Roster = require ('../schemas/RosterSchema');
 var RosterFileSchema = require ('../schemas/RosterFileSchema');
 class RosterSvc {
-    constructor() {
-        if(! RosterSvc.instance) {
-            RosterSvc.instance = this;
-            logger.debug("Roster SVC", "[SVC_INSTANCE]");
-        }
-        return RosterSvc.instance;     
+    
+  constructor() {
+    if(! RosterSvc.instance) {
+      RosterSvc.instance = this;
+      logger.debug("Roster SVC", "[SVC_INSTANCE]");
     }
+    return RosterSvc.instance;     
+  }
 
-    searchTournament(i, tournamentName){
-        logger.debug(i.name);
-        logger.info(tournamentName);
-        return i.name.match("/"+tournamentName+"/i");
-    }
 
-    async suggestionParticipant(roster) {
-        const tournamentId = roster.tournaments.selected;
-        if(tournamentId > 1){
-            //let participants = await challongeSvc.participants(true, tournamentId);
-            let participants = await challongeSvc.listParticipants(tournamentId);
-            logger.debug(participants, "[participants]");
-            let suggestions = [];
-            if(participants.length > 0){
-                let suggestionsLvl1 = participants
-                    .filter(participant => 
-                        participant.name.search(new RegExp(roster.mainFaction, "i")) >= 0);
-                logger.debug(suggestionsLvl1, 'suggestionsLvl1:'+roster.mainFaction);
-                suggestions = suggestionsLvl1;
-                let suggestionsLvl2 = participants
-                    .filter(participant => 
-                        participant.name.search(new RegExp(roster.teamOwner, "i")) >= 0);
-                logger.debug(suggestionsLvl2, 'suggestionsLvl2:'+roster.teamOwner);
-                if(suggestionsLvl2.length > 0){
-                    suggestions = suggestionsLvl2;
-                }
-                logger.debug(suggestionsLvl1, "suggestionsLvl1");
-                logger.debug(suggestionsLvl2, "suggestionsLvl2");
-                roster.tournaments.participant = {
-                    suggestions: suggestions
-                }
-            }        
+  transformName(name, key){
+    const cleanName = name.replace(/\s/g, key);        
+    return cleanName;
+  }
+
+  findUnits(faction) {
+    logger.info(faction.suggestion.army.faction.url);
+    faction.units.forEach(unit => {
+      unit['suggestion'] = {
+        'url' : faction.suggestion.army.faction.url + "/" + this.transformName(unit.name, "-")
+      }            
+    });
+    return faction;
+  }
+
+  searchTournament(i, tournamentName){
+    logger.debug(i.name);
+    logger.info(tournamentName);
+    return i.name.match("/"+tournamentName+"/i");
+  }
+
+  async suggestionParticipant(roster) {
+    const tournamentId = roster.tournaments.selected;
+    if(tournamentId > 1){
+      //let participants = await challongeSvc.participants(true, tournamentId);
+      let participants = await challongeSvc.listParticipants(tournamentId);
+      logger.debug(participants, "[participants]");
+      let suggestions = [];
+      if(participants.length > 0){
+        let suggestionsLvl1 = participants
+          .filter(participant => 
+            participant.name.search(new RegExp(roster.mainFaction, "i")) >= 0);
+        logger.debug(suggestionsLvl1, 'suggestionsLvl1:'+roster.mainFaction);
+        suggestions = suggestionsLvl1;
+        let suggestionsLvl2 = participants
+          .filter(participant => 
+            participant.name.search(new RegExp(roster.teamOwner, "i")) >= 0);
+        logger.debug(suggestionsLvl2, 'suggestionsLvl2:'+roster.teamOwner);
+        if(suggestionsLvl2.length > 0){
+          suggestions = suggestionsLvl2;
         }
-        return roster;
+        logger.debug(suggestionsLvl1, "suggestionsLvl1");
+        logger.debug(suggestionsLvl2, "suggestionsLvl2");
+        roster.tournaments.participant = {
+          suggestions: suggestions
+        }
+      }       
     }
+    return roster;
+  }
+
+  async listRosters(projections = null) {
+    let rosters = [];
+    await Roster.model.find({}, projections, (err, rostersList) => {
+      rosters = rostersList;
+    });
+    return rosters;
+  }
+
+  async getRoster(rosterId, projections = null){
+    let roster = await Roster.model.findById(rosterId, projections);
+    return roster;
+  }
 
     async suggestionTournaments(tournamentName, conferenceName){
         const tournaments = await challongeSvc.tournaments();
@@ -71,17 +100,16 @@ class RosterSvc {
         return suggestions;
     }
 
-    async saveFile(file, roster) {
-        logger.debug(file.originalname, "[INIT_SAVE_FILE]");
-        
-        var rosterFile = new RosterFileSchema.model({
-            name: file.originalname,
-            rosterName: roster.name,
-            rosterId: roster._id,
-            binary: file.buffer
-        });
-        await rosterFile.save(function (err) {if (err) logger.error (err, "Error Save RFile")});
-    }
+  async saveFile(file, roster) {
+    logger.debug(file.originalname, "[INIT_SAVE_FILE]");        
+    var rosterFile = new RosterFileSchema.model({
+      name: file.originalname,
+      rosterName: roster.name,
+      rosterId: roster._id,
+      binary: file.buffer
+    });
+    await rosterFile.save(function (err) {if (err) logger.error (err, "Error Save RFile")});
+  }
 
     async saveRoster(rosterJSON){       
         logger.debug(rosterJSON.name, "[INIT_SAVE]");
@@ -138,20 +166,10 @@ class RosterSvc {
         logger.debug("Get Factions");
         roster['forces'] = await factionSvc.findRosterFaction(roster.forces);
         roster['forces'].forEach(force => {
-            force = unitSvc.findUnits(force);
+            force = this.findUnits(force);
         });
         return roster;
     }
-
-    async listRosters(projections = null) {
-        let rosters = [];
-        await Roster.model.find({}, projections, (err, rostersList) => {
-            console.log(rostersList);
-            rosters = rostersList;
-        });
-        return rosters;
-    }
-
 }
 
 const instance = new RosterSvc();

@@ -1,0 +1,32 @@
+get:
+    tags:
+        - match-api
+    summary: Obtiene un score match por un tournamentId, matchId
+    operationId: score
+    description: |
+        Obtiene el match por tournamentId y matchId (Challonge).
+    parameters:
+        - name: matchId
+          in: path
+          description: Challonge Match Id
+          required: true
+          schema:
+            type: integer
+            default: 202526757
+        - name: tournamentId
+          in: path
+          description: Challonge Tournament Id
+          required: true
+          schema:
+            type: integer
+            default: 7968393
+    responses:
+        '200':
+          description: Resultado Match
+          content:
+            application/json:
+              schema:
+                type: object
+                items: {}
+        '400':
+          description: Mala petición

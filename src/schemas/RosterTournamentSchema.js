@@ -1,6 +1,5 @@
 var mongoose = require ("mongoose");
 
-
 var rosterTournamentSchema = new mongoose.Schema({
     bussinesKey: {type: String, required: false },
     tournament: { type: Object, required: true },
@@ -16,7 +15,7 @@ rosterTournamentSchema.pre(["save"], function (next) {
     next();
 });
 
-rosterTournamentSchema.index({ 'bussinesKey': 1 }, { unique: true });
+rosterTournamentSchema.index({ 'bussinesKey': 1 }, { 'bussinesKey': 2 }, { unique: true });
 
 const model = mongoose.model('RosterTournament', rosterTournamentSchema);
 
