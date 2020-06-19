@@ -1,5 +1,5 @@
 var mongoose = require ("mongoose");
-
+//TODO: Debo borrar esta entidad que no se ocupa
 var tournamentMatchSchema = new mongoose.Schema({
     bussinesKey: {type: String, required: false },
     tournament: { type: Object, required: true },

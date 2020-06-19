@@ -3,6 +3,7 @@ const logger = require('../../LogConfig');
 const Mth40Error = require  ('../utils/Mth40Error');
 const rosterSvc = require('./RosterSvc');
 const factionSvc = require('./FactionSvc');
+var Roster = require ('../schemas/RosterSchema');
 
 class UnitSvc {
   constructor() {
@@ -13,9 +14,32 @@ class UnitSvc {
     return UnitSvc.instance;
   }
 
-  async updateUnits(rosterId) {
-    logger.info('update units rosterId = ', rosterId);    
-    const roster = await rosterSvc.getRoster(rosterId, 'conferenceName forces');
+  async findRosterUnit(id) {
+    let unitRoster = null;
+    await Roster.model.aggregate([      
+      { "$unwind": "$forces" },
+      { "$unwind": "$forces.units" },
+      { "$match": {
+        'forces.units.id': id,
+      }},
+      { "$project": {
+        _id: 0,
+        "unitId": "$forces.units.id",
+        "name": "$forces.units.name",
+        "url": "$forces.units.suggestion.url",
+        "mainCategory": "$forces.units.categories.main",
+    }},
+    ]).then((unit) => {
+      unitRoster = unit;
+    }).catch((err) => {
+      logger.error(err);
+      throw new Mth40Error(err.message, 424, 'UnitSvcError');      
+    });
+    return unitRoster && unitRoster.length > 0?unitRoster[0]:null;
+  }
+
+  async updateUnits(roster) {
+    logger.info('update units rosterId = ', roster.id);        
     //const roster = await rosterSvc.getRoster(rosterId);
     for (let i = 0; i < roster.forces.length; i++) {
       const force = roster.forces[i];
@@ -33,7 +57,7 @@ class UnitSvc {
             `No se encuentra el force.suggestion.army.faction en roster ${roster._id}`, 
             424, 'MatchScoreError');
         }
-        logger.debug(force.suggestion, 'force.suggestion');
+        //logger.debug(force.suggestion, 'force.suggestion');
         const rosterArmy = force.suggestion.army;
         const armyFaction = await factionSvc.find(rosterArmy.faction.name);
         const factionUnits = armyFaction.factions[0].units?armyFaction.factions[0].units:[];

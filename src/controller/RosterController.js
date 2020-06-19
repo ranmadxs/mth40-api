@@ -21,7 +21,7 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
         return value;
     });        
     let roster = await rosterSvc.saveRoster(JSON.parse(jsonStr));
-    //rosterSvc.saveFile(req.file, roster);
+    rosterSvc.saveFile(req.file, roster);
     //Save roster tournament
     if (roster.tournaments && roster.tournaments.selected
         && roster.tournaments.participant && roster.id
@@ -48,7 +48,7 @@ router.post('/save', upload.single("roster_file"), async (req, res) => {
             rosterTorunamentSvc.save(rosterTournament);
         }
     } if ( roster.id ) {
-      await unitSvc.updateUnits(roster.id);
+      await unitSvc.updateUnits(roster);
     }
     res.writeHead(200, {'Content-Type': 'application/json'});
     delete roster._id;
@@ -59,16 +59,14 @@ router.post('/findParticipant', function(req, res) {
     rosterSvc.suggestionParticipant(JSON.parse(req.body.roster_json)).then(result => {
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(result));
-    });    
-    
+    });
 });
 
 router.post('/validate', function(req, res) {
     rosterSvc.validateRoster(JSON.parse(req.body.roster_json)).then(result => {
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(result));
-    });    
-    
+    });
 });
 
 router.get('/list', async (req, res) => {

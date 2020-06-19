@@ -1,11 +1,16 @@
 var mongoose = require ("mongoose");
-var playerScore = require("./PlayerScoreSchema");
 
 const matchScoreSchema = new mongoose.Schema({
   tournamentId: { type: Number, required: true },
   matchId: { type: Number, required: true },
   status: { type: String, required: false },
-  playersScore: [playerScore.schema],
+  rosterTournaments: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'RosterTournament',
+    required: true,
+  }],
+  createdAt: {type: Date, default: Date.now},
+  updateAt: {type: Date, default: Date.now},
 });
 
 matchScoreSchema.index({ tournamentId: 1, matchId: 1 }, { unique: true });

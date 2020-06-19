@@ -49,6 +49,7 @@ class WahapediaSvc {
     }
 
     async getFactions(){
+      const baseUrl = mth40.properties.wahapedia.base_url;
       rp(this.armies_url).then(function(html){
           const $ = cheerio.load(html);
           let arrayArmies = $('.NavDropdown-content .FactionHeader').toArray();
@@ -66,7 +67,7 @@ class WahapediaSvc {
             }
             let faction = {
               name: $(element).html().hexDecode(),
-              url: $(element).attr('href')
+              url: baseUrl + $(element).attr('href')
             }
             armie["factions"].push(faction);
             logger.debug("  > " + faction.name);

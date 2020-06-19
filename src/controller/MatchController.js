@@ -18,7 +18,7 @@ router.get('/score/:tournamentId/:matchId', [
       return res.status(422).json({ errors: errors.array() });
     }
     const { params: {tournamentId, matchId} } = req;
-    const result = null;
+    let result = null;
     try{
       result = await matchScoreSvc.findFull(tournamentId, matchId);
     } catch(ex){
