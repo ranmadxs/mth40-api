@@ -59,14 +59,15 @@ class UnitScoreSvc {
           for (let k = 0; k < rosterUnits.length; k++) {
             const rUnit = rosterUnits[k];
             if (!(matchUnits.filter(fUnit => fUnit.unitId == rUnit.id).length > 0)) {
+              logger.debug(rUnit, 'rUnit');
               logger.warn('No existe la unidad', rUnit.name);
               //Aca se guarda.
-              const unitScore = {
+              let unitScore = {
                 unitId: rUnit.id,
                 matchScore: matchScore.id,
                 rosterTournament: rosterTournament.id,
-                defensive: null,
-                offensive: null,
+                offensive: {kill: 0, wound: 0, objetive: 0},
+                defensive: {death: 0, wound: 0, saving: 0},
               };
               unitScore = await this.save(unitScore);
             }

@@ -72,6 +72,16 @@ class WahapediaSvc {
             armie["factions"].push(faction);
             logger.debug("  > " + faction.name);
             logger.debug("     " + faction.url);
+            if (faction.name == 'Space Marines'){
+              const factionAstartes = {
+                name: 'Adeptus Astartes',
+                url: faction.url,
+              }
+              armie["factions"].push(factionAstartes);
+              logger.debug("  > " + factionAstartes.name);
+              logger.debug("     " + factionAstartes.url);              
+            }
+            
             if($(element).next()[0].name == "div"){
               armies.push(armie);
             }

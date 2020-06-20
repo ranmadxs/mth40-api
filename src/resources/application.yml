@@ -12,7 +12,7 @@ database:
   mongodb:
     #url: mongodb://mth40k_usr:nueva123@ds263248.mlab.com:63248/heroku_kzt720hp
     url: mongodb://localhost/mth40?retryWrites=true&w=majority
-    debug: false
+    debug: true
   mysql:
     #host: relatosdelaherejia.cl
     #user: relatosd_wh40k

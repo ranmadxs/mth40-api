@@ -27,15 +27,16 @@ class MatchScoreSvc {
   }
 
   async findFull (tournamentId, matchId) {
-    const matchScore = await this.find(tournamentId, matchId);
+    let matchScore = await this.find(tournamentId, matchId);
     let players = [];
 
     if(_.isEmpty(matchScore)) {
       logger.warn(`Se debe crear el matchScore para tournamentId=${tournamentId}, matchId=${matchId}`, 'findFull');
-      matchScore = await this.createFull({
+      await this.createFull({
         tournamentId: tournamentId,
         matchId: matchId,
       });
+      matchScore = await this.find(tournamentId, matchId);
     } else {
       for (let i = 0; i < matchScore.rosterTournaments.length; i++){
         const rosterTournament = matchScore.rosterTournaments[i];
@@ -59,9 +60,11 @@ class MatchScoreSvc {
     for (let i = 0; i < matchScore.rosterTournaments.length; i++) {
       const rosterTournament = matchScore.rosterTournaments[i];
       const units = await unitScoreSvc.listFull(rosterTournament.id, matchScore.id);
+      logger.info(rosterTournament.roster, 'rosterTournament.roster');
       const faction = await factionSvc.find(rosterTournament.roster.mainFaction);
-      //logger.debug(faction, 'faction');
+      logger.debug(faction, 'faction');
       matchScore.rosterTournaments[i] = rosterTournament;
+      const factionUrl = faction && faction.factions?faction.factions[0].url:null;
       const player = {
         participant: {
           id: rosterTournament.participant.id,
@@ -73,7 +76,7 @@ class MatchScoreSvc {
           conferenceName: rosterTournament.roster.conferenceName,
           mainFaction: {
             name: rosterTournament.roster.mainFaction,
-            url: faction.factions[0].url,
+            url: factionUrl,
           },          
           teamOwner: rosterTournament.roster.teamOwner,
         },
@@ -89,8 +92,10 @@ class MatchScoreSvc {
   async createFull (fullMScore) {
     const tournamentId = fullMScore.tournamentId;
     const matchId = fullMScore.matchId;
+    const match = await matchSvc.find(tournamentId, matchId);
     logger.info(`tournamentId=${tournamentId}, matchId=${matchId}`, 'Create full Match Score');
-    const players = fullMScore.match.players;
+    const players = match.players;
+    logger.info(match, 'match');
     let matchScoreObj = {
       tournamentId: tournamentId,
       matchId: matchId,
@@ -109,11 +114,15 @@ class MatchScoreSvc {
       
       rosterTournaments.push(rosterTournament);
     }
+    /* (2) Se asignan los roster tournaments al matchScore (debe existir al menos 2) */
     matchScoreObj.rosterTournaments = rosterTournaments;
-    /* (2) Se crea el MatchScore */
+    if (rosterTournaments.length < 2) {
+      throw new Mth40Error('Se requieren al menos 2 roster tournaments', 424, 'MatchScoreError');
+    }
+    /* (3) Se crea el MatchScore */
     matchScoreObj = await this.create(matchScoreObj);
 
-    /* (3) Se crean en caso que no existan los units score */
+    /* (4) Se crean en caso que no existan los units score */
     await unitScoreSvc.createAll(matchScoreObj);
     return matchScoreObj;
   }

@@ -20,7 +20,7 @@ class MatchSvc {
     */
     const matchQuery = {};
     let match = null;
-    if (tournamentId && Number.isInteger(tournamentId)) {
+    if (tournamentId) {
       matchQuery.id = parseInt(tournamentId);
     }
     await Tournament.model.aggregate([

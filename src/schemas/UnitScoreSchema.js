@@ -9,9 +9,9 @@ const offensiveSubschema = new mongoose.Schema({
 
 const defensiveSubschema = new mongoose.Schema({
   _id: false,
-  kill: { type: Number, default: 0 },
+  death: { type: Number, default: 0 },
   wound: { type: Number, default: 0 },
-  objetive: { type: Number, default: 0 },
+  saving: { type: Number, default: 0 },
 });
 
 // TODO: crear alias en el roster->forces->unit

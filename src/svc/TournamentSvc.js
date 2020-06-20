@@ -20,7 +20,10 @@ class TournamentSvc {
   }
 
   async getTMatch(tournamentId, matchId) {
+    logger.info(tournamentId, 'tournamentId');
+    logger.info(matchId, 'matchId');
     const match = await matchSvc.find(tournamentId, matchId);
+    logger.info(match, 'match');
     let player1 = null;
     let player2 = null;
     if (match.players && match.players.player1 && match.players.player1.id) {
