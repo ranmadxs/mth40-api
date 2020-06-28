@@ -79,6 +79,26 @@ class UnitScoreSvc {
 
   }
 
+  async saveOption(matchScoreOption) {
+    logger.debug(matchScoreOption, "[INIT_SAVE]");
+    const setModel = {};
+    setModel[`${matchScoreOption.type}`] = {};
+    setModel[`${matchScoreOption.type}`][`${matchScoreOption.subType}`] = matchScoreOption.value;
+    const objName = {};
+    objName[`${matchScoreOption.type}.${matchScoreOption.subType}`] = matchScoreOption.value;
+    let responseSvc = null;
+    await UnitScore.model.updateOne({ _id: matchScoreOption.id, },
+      { $set: objName, $inc: { __v: 1 } })
+    .then((resp) => {
+      logger.debug(resp, 'resp');
+      responseSvc = resp;
+    }).catch((err) => {
+      logger.error(err);
+      throw new Mth40Error(err.message, 424, 'UnitSvcError');      
+    });
+    return responseSvc;
+  }
+
   async save(unitScoreObj) {
     logger.debug(unitScoreObj, "[INIT_SAVE]");
     unitScoreObj.updateAt = new Date();

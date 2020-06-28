@@ -4,10 +4,24 @@ var router = express.Router();
 const logger = require('../../LogConfig');
 const { check, validationResult } = require('express-validator');
 const matchScoreSvc = require('../svc/MatchScoreSvc');
+const unitScoreSvc = require('../svc/UnitScoreSvc');
 const matchSvc = require('../svc/MatchSvc');
 const Mth40Error = require  ('../utils/Mth40Error');
 
 logger.info("Match Controller", "[CTRL_INIT]");
+
+router.put('/saveOption', async (req, res) => {
+  logger.info(req.body, 'body');
+  let result = null;
+  try{
+    result = await unitScoreSvc.saveOption(req.body);
+  } catch(ex){
+    logger.error(ex);
+    return res.status(_.isEmpty(ex)?500:ex.code).json(_.isEmpty(ex)?{ error: ex.message }:ex);
+  }
+  res.writeHead(200, {'Content-Type': 'application/json'});
+  res.end(JSON.stringify(result));  
+}); 
 
 router.get('/score/:tournamentId/:matchId', [
     check('matchId').isNumeric(),

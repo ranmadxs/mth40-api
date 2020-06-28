@@ -5,7 +5,9 @@
 /roster/validate:
   $ref: ./roster/validate.yaml
 /match/find/{matchId}/{tournamentId}:
-  $ref: ./match/find.yaml 
+  $ref: ./match/find.yaml  
+/match/saveOption:
+  $ref: ./match/saveOption.yaml
 /match/score/{tournamentId}/{matchId}:
   $ref: ./match/score.yaml   
 /tournament/troster:
