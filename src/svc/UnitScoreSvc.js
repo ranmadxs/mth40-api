@@ -3,8 +3,6 @@ const logger = require('../../LogConfig');
 const Mth40Error = require  ('../utils/Mth40Error');
 const UnitScore = require ('../schemas/UnitScoreSchema');
 const unitSvc = require('./UnitSvc');
-const rosterSvc = require('./RosterSvc');
-var Army = require ('../schemas/ArmySchema');
 
 class UnitScoreSvc {
   constructor() {
@@ -21,18 +19,23 @@ class UnitScoreSvc {
     for(let i = 0; i < listUScores.length; i++){
       let unitScore = listUScores[i];
       let unitRoster = await unitSvc.findRosterUnit(unitScore.unitId);
-      
-      unitScore.url = unitRoster.url;
-      unitScore.name = unitRoster.name;
-      listUScores[i] = unitScore;
-      retList.push({
-        id: unitScore._id,   
-        ...unitRoster,
-        matchScoreId: unitScore.matchScore,
-        rosterTournamentId: unitScore.rosterTournament,
-        defensive: unitScore.defensive,
-        offensive: unitScore.offensive,
-      })
+      if (unitRoster == null){
+        logger.warn('No se ha encontrado el unitScore.unitId = ', unitScore.unitId);
+        logger.warn(matchScoreId, 'matchScoreId');
+      }
+      if (!_.isEmpty(unitRoster)){
+        unitScore.url = unitRoster.url;
+        unitScore.name = unitRoster.name;
+        listUScores[i] = unitScore;
+        retList.push({
+          id: unitScore._id,   
+          ...unitRoster,
+          matchScoreId: unitScore.matchScore,
+          rosterTournamentId: unitScore.rosterTournament,
+          defensive: unitScore.defensive,
+          offensive: unitScore.offensive,
+        });
+      }
     }
     return retList;
   }
@@ -76,7 +79,6 @@ class UnitScoreSvc {
         }
       }
     }
-
   }
 
   async saveOption(matchScoreOption) {
@@ -103,28 +105,26 @@ class UnitScoreSvc {
     logger.debug(unitScoreObj, "[INIT_SAVE]");
     unitScoreObj.updateAt = new Date();
     let errorObj = null;
-    await UnitScore.model.updateOne({ _id: unitScoreObj.id, },
-        { $set: { ... unitScoreObj }, $inc: { __v: 1 } }, unitScoreObj).
-        then(async (result) => {
-            if (result.n === 0) {
-                logger.warn(result, 'No se ha encontrado el unitScore');
-                
-                let unitScore = new UnitScore.model(unitScoreObj);                
-                await unitScore.save()
-                  .then((unitScore) => {
-                    logger.debug(unitScore, 'Guardado OK');
-                  }).catch((err) => {
-                  errorObj = new Mth40Error(err.message, 424, 'UnitScoreSvcError');
-                });
-                unitScoreObj.id = unitScore._id;
-            }
-        });
-    if (!_.isEmpty(errorObj)){
-      throw errorObj;
-    }
-    return unitScoreObj;
+      await UnitScore.model.updateOne({ _id: unitScoreObj.id, },
+          { $set: { ... unitScoreObj }, $inc: { __v: 1 } }, unitScoreObj).
+          then(async (result) => {
+              if (result.n === 0) {
+                  logger.warn(result, 'No se ha encontrado el unitScore');
+                  let unitScore = new UnitScore.model(unitScoreObj);      
+                  await unitScore.save()
+                    .then((unitScore) => {
+                      logger.debug(unitScore, 'Guardado OK');
+                    }).catch((err) => {
+                    errorObj = new Mth40Error(err.message, 424, 'UnitScoreSvcError');
+                  });
+                  unitScoreObj.id = unitScore._id;
+              }
+          });
+      if (!_.isEmpty(errorObj)){
+        throw errorObj;
+      }
+      return unitScoreObj;
   }
-
 }
 
 

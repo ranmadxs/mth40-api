@@ -4,6 +4,7 @@ const Mth40Error = require  ('../utils/Mth40Error');
 const rosterSvc = require('./RosterSvc');
 const factionSvc = require('./FactionSvc');
 var Roster = require ('../schemas/RosterSchema');
+var RosterUnitExtended = require ('../schemas/RosterUnitExtended');
 
 class UnitSvc {
   constructor() {
@@ -14,9 +15,25 @@ class UnitSvc {
     return UnitSvc.instance;
   }
 
+  async saveAlias(rosterUnitExtended) {
+    rosterUnitExtended.updateAt = new Date();
+    await RosterUnitExtended.model.updateOne({ 
+        'unitId': rosterUnitExtended.unitId
+    }, { $set: { alias: rosterUnitExtended.alias }, $inc: { __v: 1 } },
+    rosterUnitExtended).then(async (result) => {
+      if (result.n === 0) {
+        let rosterUnitExtendedNew = new RosterUnitExtended.model(rosterUnitExtended);
+        await rosterUnitExtendedNew.save(function (err) {
+          if (err) logger.error (err, "Error Save rosterUnitExtended")
+        });
+      }
+    });
+    return rosterUnitExtended;   
+  }
+
   async findRosterUnit(id) {
     let unitRoster = null;
-    await Roster.model.aggregate([      
+    await Roster.model.aggregate([
       { "$unwind": "$forces" },
       { "$unwind": "$forces.units" },
       { "$match": {
@@ -35,7 +52,20 @@ class UnitSvc {
       logger.error(err);
       throw new Mth40Error(err.message, 424, 'UnitSvcError');      
     });
+    if (unitRoster && unitRoster.length > 0 ) {
+      const extRostUnit = await this.findAlias(unitRoster[0].unitId);
+      if(!_.isEmpty(extRostUnit)) {
+        unitRoster[0].alias = extRostUnit.alias;
+      }
+    }
     return unitRoster && unitRoster.length > 0?unitRoster[0]:null;
+  }
+
+  async findAlias (unitId) {
+    logger.debug("findAlias=" + unitId);
+    const findCond = { "unitId": unitId };
+    const queryObj = await RosterUnitExtended.model.findOne(findCond);
+    return queryObj;
   }
 
   async updateUnits(roster) {

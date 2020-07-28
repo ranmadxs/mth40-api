@@ -43,7 +43,7 @@ class FactionSvc {
                         name: suggestionsLvl1.name,
                         faction: {
                             name: factionName,
-                            url: mth40.properties.wahapedia.base_url + suggestionsLvl1.factions[0].url,
+                            url: suggestionsLvl1.factions[0].url,
                             subFaction: subFactionObj
                         }
                     },

@@ -6,6 +6,7 @@ const { check, validationResult } = require('express-validator');
 const matchScoreSvc = require('../svc/MatchScoreSvc');
 const unitScoreSvc = require('../svc/UnitScoreSvc');
 const matchSvc = require('../svc/MatchSvc');
+const unitSvc = require('../svc/UnitSvc');
 const Mth40Error = require  ('../utils/Mth40Error');
 
 logger.info("Match Controller", "[CTRL_INIT]");
@@ -14,7 +15,21 @@ router.put('/saveOption', async (req, res) => {
   logger.info(req.body, 'body');
   let result = null;
   try{
-    result = await unitScoreSvc.saveOption(req.body);
+    const {
+      type,
+      alias,
+      unitId,
+    } = req.body;
+    if (type.toLowerCase() === 'alias') {      
+      const rosterUnitExtended = {
+        alias: alias,
+        unitId: unitId,
+      };
+      logger.info(rosterUnitExtended, 'Saving alias');
+      await unitSvc.saveAlias(rosterUnitExtended);
+    } else if(type.toLowerCase() === 'offensive' || type.toLowerCase() === 'defensive'){    
+      result = await unitScoreSvc.saveOption(req.body);
+    }
   } catch(ex){
     logger.error(ex);
     return res.status(_.isEmpty(ex)?500:ex.code).json(_.isEmpty(ex)?{ error: ex.message }:ex);
