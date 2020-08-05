@@ -26,11 +26,11 @@ class TournamentSvc {
     logger.info(match, 'match');
     let player1 = null;
     let player2 = null;
-    if (match.players && match.players.player1 && match.players.player1.id) {
+    if (match && match.players && match.players.player1 && match.players.player1.id) {
         player1 = await rosterTorunamentSvc.get(tournamentId, match.players.player1.id);
     } 
     
-    if (match.players && match.players.player2 && match.players.player2.id) {
+    if (match && match.players && match.players.player2 && match.players.player2.id) {
         player2 = await rosterTorunamentSvc.get(tournamentId, match.players.player2.id);
     }
     const result = {

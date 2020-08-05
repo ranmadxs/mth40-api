@@ -19,8 +19,7 @@ router.get('/tmatch', [
         const {query: {tournamentId, matchId}} = req;
         const result = await tournamentSvc.getTMatch(tournamentId, matchId);
         res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(result));        
-
+        res.end(JSON.stringify(result));
 });
 
 router.get('/troster', [

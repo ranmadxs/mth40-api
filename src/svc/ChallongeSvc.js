@@ -79,8 +79,6 @@ class ChallongeSvc {
                     var tournament = challongeUtils.formatTournament(fullTournament);
                     logger.debug(tournament, 'pre-tournament');
                     tournament.participants = participants;
-                    tournamentSvc.save(tournament);
-                    logger.debug(tournament, 'post-tournament');
                     let tournamentMatches = [];
                     if( matches ) {
                         matches.forEach( ({match}) => {
@@ -98,6 +96,8 @@ class ChallongeSvc {
                             }
                         });
                         tournament.matches = tournamentMatches;
+                        tournamentSvc.save(tournament);
+                        logger.debug(tournament, 'post-tournament');    
                     }
                     return tournament;
             });

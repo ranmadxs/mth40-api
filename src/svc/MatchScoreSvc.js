@@ -26,6 +26,23 @@ class MatchScoreSvc {
      return matchScore && matchScore.length > 0?matchScore[0]:null;
   }
 
+  async calculateMVP (matchFull) {
+    matchFull.players.forEach(player => {
+      let mvp = 0;
+      let mvpScore  = null;
+      player.units.forEach(unit => {
+        const C = unit.offensive.objetive;
+        const D = unit.offensive.kill - unit.defensive.death;
+        const U = unit.offensive.wound + unit.defensive.saving - unit.defensive.wound;
+        mvpScore = C*100 + D*25 + U*10;
+        unit.mvp = {
+          score: mvpScore,
+        };
+      });      
+    });
+    return matchFull;    
+  }
+
   async findFull (tournamentId, matchId) {
     let matchScore = await this.find(tournamentId, matchId);
     let players = [];
@@ -48,7 +65,7 @@ class MatchScoreSvc {
       }
       await unitScoreSvc.createAll(matchScore);
     }
-    const matchFull = {
+    let matchFull = {
       matchScore: { 
         id: matchScore._id, 
         status: matchScore.status,
@@ -86,6 +103,9 @@ class MatchScoreSvc {
     }
     matchFull.players = players;
     //logger.debug(matchScore, 'matchScore');
+    if (matchFull && !_.isEmpty(matchFull.players) && matchFull.players.length >= 2) {
+      matchFull = await this.calculateMVP(matchFull);
+    }
     return matchFull;
   }
 

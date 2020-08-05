@@ -2,7 +2,7 @@ put:
     tags:
         - match-api
     summary: Guarda el valor de un unitScore option.
-    operationId: score
+    operationId: saveOption
     description: |
         Guarda el valor de una opción, pj offensive.kill =3
     requestBody:
