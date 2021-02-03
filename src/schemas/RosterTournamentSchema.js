@@ -9,7 +9,6 @@ var rosterTournamentSchema = new mongoose.Schema({
     updateAt: {type: Date, default: Date.now},    
 });
 
-
 rosterTournamentSchema.pre(["save"], function (next) {
     this.bussinesKey = `tid=${this.tournament.id}_rosterId=${this.roster.id}`;
     next();

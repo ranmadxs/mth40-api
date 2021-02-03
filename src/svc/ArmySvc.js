@@ -44,9 +44,10 @@ class ArmySvc {
         });        
     }
 
-    listArmy () {
-        return new Promise(function (resolve, reject) {
-            resolve( {resp: true});
+    async listArmy () {
+        return new Promise(async (resolve, reject)  => {
+          const armies = await Army.model.find();
+          resolve( armies );
         });
     }
 };

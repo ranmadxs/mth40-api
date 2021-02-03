@@ -31,13 +31,14 @@ class UnitSvc {
     return rosterUnitExtended;   
   }
 
-  async findRosterUnit(id) {
+  async findRosterUnit(rosterId, unitId) {
     let unitRoster = null;
     await Roster.model.aggregate([
       { "$unwind": "$forces" },
       { "$unwind": "$forces.units" },
       { "$match": {
-        'forces.units.id': id,
+        'forces.units.id': unitId,
+        _id: rosterId,
       }},
       { "$project": {
         _id: 0,
@@ -73,7 +74,7 @@ class UnitSvc {
     //const roster = await rosterSvc.getRoster(rosterId);
     for (let i = 0; i < roster.forces.length; i++) {
       const force = roster.forces[i];
-      //logger.debug(force, 'force');
+      logger.debug(force, 'force');
       if(force.units && force.units.length > 0 ){
         const rosterUnits = force.units;
         var armyUnits = rosterUnits.map((unit) => ({

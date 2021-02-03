@@ -1,0 +1,39 @@
+get:
+    tags:
+        - wahapedia-api
+    summary: Obtiene un match por un tournamentId
+    operationId: find
+    description: |
+        Scraping el unit por edition/:faction/:unit (Wahapedia).
+    parameters:
+        - name: edition
+          in: path
+          description: WH40K Editiion
+          required: true
+          schema:
+            type: string
+            default: wh40k9ed
+        - name: faction
+          in: path
+          description: Faction of the WH40K
+          required: false
+          schema:
+            type: string
+            default: adepta-sororitas
+        - name: unit
+          in: path
+          description: Nombre de la unidad 2h40k
+          required: false
+          schema:
+            type: string
+            default: Celestine            
+    responses:
+        '200':
+          description: Resultado Scraping
+          content:
+            application/json:
+              schema:
+                type: object
+                items: {}
+        '400':
+          description: Mala petición

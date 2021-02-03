@@ -9,6 +9,7 @@ class FactionSvc {
             FactionSvc.instance = this;
             logger.debug("Faction SVC", "[SVC_INSTANCE]");
         }
+        this.wahapediaFactionUrl = mth40.properties.wahapedia.base_url + "/" + mth40.properties.wahapedia.edition + "/factions";
         return FactionSvc.instance;     
     }
 
@@ -36,14 +37,17 @@ class FactionSvc {
                         this.addSubFaction(armyId, factionName, subFactionName);
                         subFactionObj["name"] = subFactionName;
                     }
-                }    
+                }
+
+                const factionUrl = this.wahapediaFactionUrl + "/" + factionName.replace(/\s+/g, '-').toLowerCase();
+
                 faction['suggestion'] = {
                     army: {
                         id: armyId,
                         name: suggestionsLvl1.name,
                         faction: {
                             name: factionName,
-                            url: suggestionsLvl1.factions[0].url,
+                            url: factionUrl,
                             subFaction: subFactionObj
                         }
                     },

@@ -2,6 +2,7 @@ var logger = require('../../LogConfig');
 const challongeSvc =  require('./ChallongeSvc');
 const factionSvc = require('./FactionSvc');
 var Roster = require ('../schemas/RosterSchema');
+// var mth40 = require ('../configs');
 var RosterFileSchema = require ('../schemas/RosterFileSchema');
 class RosterSvc {
     
@@ -10,6 +11,7 @@ class RosterSvc {
       RosterSvc.instance = this;
       logger.debug("Roster SVC", "[SVC_INSTANCE]");
     }
+    // this.wahapediaFactionUrl = mth40.properties.wahapedia.base_url + "/" + mth40.properties.wahapedia.edition + "/factions";
     return RosterSvc.instance;     
   }
 
@@ -20,10 +22,13 @@ class RosterSvc {
   }
 
   findUnits(faction) {
-    logger.info(faction.suggestion.army.faction.url);
+    // const factionUrl = this.wahapediaFactionUrl + "/" + faction.suggestion.army.faction.name.replace(/\s+/g, '-').toLowerCase();
+    const factionUrl = faction.suggestion.army.faction.url;
+    logger.debug(factionUrl, '[factionUrl]');
+    // old :: logger.debug(faction.suggestion.army.faction.url);
     faction.units.forEach(unit => {
       unit['suggestion'] = {
-        'url' : faction.suggestion.army.faction.url + "/" + this.transformName(unit.name, "-")
+        'url' : factionUrl + "/" + this.transformName(unit.name, "-")
       }            
     });
     return faction;

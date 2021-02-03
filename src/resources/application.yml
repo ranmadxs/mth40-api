@@ -6,6 +6,7 @@ redis:
   url: redis://localhost:6379
   ttl:
     challongeTournaments: 600
+    wahapedia: 1200
   flushAll: false
 
 database:
@@ -28,5 +29,6 @@ challonge:
   base_url: https://api.challonge.com/v1
 
 wahapedia:
-  armies_url: /wh40k8ed/the-rules/playing-this-game/
+  armies_url: /wh40k9ed/the-rules/playing-this-game/
   base_url: http://wahapedia.ru
+  edition: wh40k9ed

@@ -20,7 +20,8 @@ module.exports = {
     },
     formatMatch : (rawData, player1, player2) => {
         const matchNumber = rawData.suggested_play_order;
-        const matchName = matchNumber + ') ' + player1.name + " VS " + player2.name;
+        const groupName = rawData.group_id != null ? "[" + rawData.group_name + "]  " : "";
+        const matchName = groupName + matchNumber + ') ' + player1.name + " VS " + player2.name;
         var match = {
             id: rawData.id,
             name: matchName,

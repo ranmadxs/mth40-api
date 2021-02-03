@@ -2,7 +2,7 @@ var mongoose = require ("mongoose");
 var CostSchema = require("./CostSchema");
 
 var rosterSchema = new mongoose.Schema({
-    result: {type: Boolean},
+    result: { type: Boolean },
     name: { type: String, trim: true },
     status: { type: String, trim: true },
     forces: [],

@@ -26,15 +26,22 @@ class MatchScoreSvc {
      return matchScore && matchScore.length > 0?matchScore[0]:null;
   }
 
+  calculateUnitMVP (unit) {
+    logger.info(unit, 'unit');
+    logger.info(unit.offensive, 'unit.offensive');
+    const C = parseInt(unit.offensive.objetive);
+    const D = parseInt(unit.offensive.kill) - parseInt(unit.defensive.death);
+    const U = parseInt(unit.offensive.wound) + parseInt(unit.defensive.saving) - parseInt(unit.defensive.wound);
+    const mvpScore = C*100 + D*25 + U*10;
+    return mvpScore;
+  }
+
   async calculateMVP (matchFull) {
     matchFull.players.forEach(player => {
       let mvp = 0;
       let mvpScore  = null;
       player.units.forEach(unit => {
-        const C = unit.offensive.objetive;
-        const D = unit.offensive.kill - unit.defensive.death;
-        const U = unit.offensive.wound + unit.defensive.saving - unit.defensive.wound;
-        mvpScore = C*100 + D*25 + U*10;
+        mvpScore = this.calculateUnitMVP(unit);
         unit.mvp = {
           score: mvpScore,
         };
@@ -76,7 +83,7 @@ class MatchScoreSvc {
 
     for (let i = 0; i < matchScore.rosterTournaments.length; i++) {
       const rosterTournament = matchScore.rosterTournaments[i];
-      const units = await unitScoreSvc.listFull(rosterTournament.id, matchScore.id);
+      const units = await unitScoreSvc.listFull(rosterTournament.roster._id, rosterTournament.id, matchScore.id);
       logger.info(rosterTournament.roster, 'rosterTournament.roster');
       const faction = await factionSvc.find(rosterTournament.roster.mainFaction);
       logger.debug(faction, 'faction');

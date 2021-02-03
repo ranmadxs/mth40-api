@@ -11,11 +11,13 @@
 /match/score/{tournamentId}/{matchId}:
   $ref: ./match/score.yaml   
 /tournament/troster:
-  $ref: ./tournament/troster.yaml  
+  $ref: ./tournament/troster.yaml
 /tournament/tmatch:
-  $ref: ./tournament/tmatch.yaml    
+  $ref: ./tournament/tmatch.yaml
 /wahapedia/factions:
   $ref: ./wahapedia/factions.yaml
+/wahapedia/unit/{edition}/{faction}/{unit}:
+  $ref: ./wahapedia/getUnit.yaml
 /config/redis/clear:
   $ref: ./config/redisClear.yaml
 /challonge/tournaments:

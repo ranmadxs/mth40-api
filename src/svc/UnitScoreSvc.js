@@ -13,12 +13,12 @@ class UnitScoreSvc {
     return UnitScoreSvc.instance;
   }
 
-  async listFull(rosterTournamentId, matchScoreId) {
+  async listFull(rosterId, rosterTournamentId, matchScoreId) {
     let retList = [];
     let listUScores = await this.list(rosterTournamentId, matchScoreId);
     for(let i = 0; i < listUScores.length; i++){
       let unitScore = listUScores[i];
-      let unitRoster = await unitSvc.findRosterUnit(unitScore.unitId);
+      let unitRoster = await unitSvc.findRosterUnit(rosterId, unitScore.unitId);
       if (unitRoster == null){
         logger.warn('No se ha encontrado el unitScore.unitId = ', unitScore.unitId);
         logger.warn(matchScoreId, 'matchScoreId');

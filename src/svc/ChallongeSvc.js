@@ -1,5 +1,6 @@
 const axios = require('axios');
 const btoa = require('btoa');
+const _ = require('lodash');
 var redisFactory = require('../factories/RedisFactory');
 var logger = require('../../LogConfig');
 var mth40 = require ('../configs');
@@ -46,7 +47,7 @@ class ChallongeSvc {
             redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
             listMatches = JSON.parse(valueRedis);
         } else {
-            logger.debug("get participants from challonge API", tournamentId);
+            logger.debug("get matches from challonge API", tournamentId);
             listMatches = await this.listMatches(tournamentId);
             await redisFactory.set(redisKey, JSON.stringify(listMatches));
             redisFactory.expire(redisKey, mth40.properties.redis.ttl.challongeTournaments);
@@ -80,16 +81,28 @@ class ChallongeSvc {
                     logger.debug(tournament, 'pre-tournament');
                     tournament.participants = participants;
                     let tournamentMatches = [];
+                    let lastGroup = null;
+                    let currentGroup = null;
+                    let groupName = "A";
                     if( matches ) {
                         matches.forEach( ({match}) => {
+                          logger.debug(match, 'match');
                             if ( match.state != 'pending'
                                 && match.player1_id && match.player2_id) {
                                 let player1 =participants.filter(({participant}) =>
-                                    participant.id == match.player1_id);
+                                    participant.id == match.player1_id || participant.group_player_ids.includes(match.player1_id));
                                 let player2 =participants.filter(({participant}) =>
-                                    participant.id == match.player2_id);
+                                    participant.id == match.player2_id || participant.group_player_ids.includes(match.player2_id));
                                 player1 = challongeUtils.formatParticipant(player1[0].participant);
                                 player2 = challongeUtils.formatParticipant(player2[0].participant);
+                                if(match.group_id != null && match.group_id > 1){
+                                  match.group_name = groupName;
+                                  currentGroup = match.group_id;
+                                  if(lastGroup != currentGroup && lastGroup != null) {
+                                    groupName = String.fromCharCode(groupName.charCodeAt(0) + 1);
+                                  }
+                                  lastGroup = currentGroup;
+                                }
                                 let matchTournament = challongeUtils
                                     .formatMatch(match, player1, player2);
                                 tournamentMatches.push(matchTournament);
@@ -134,6 +147,7 @@ class ChallongeSvc {
     async listMatches(tournamentId) {
         var api_key = mth40.properties.challonge.api_key;
         var session_url = mth40.properties.challonge.base_url + '/tournaments/'+tournamentId+'/matches.json?api_key='+api_key;
+        logger.debug(session_url, 'url');
         var matches = await axios.get(session_url)
         .then(async response => {
             var matches = [];
@@ -142,15 +156,21 @@ class ChallongeSvc {
                 const state = fullMatch.state;
                 if ( state != 'pending' && fullMatch.player1_id && fullMatch.player2_id) {
                     const matchNumber = fullMatch.suggested_play_order;
-                    const player1 = await this.getParticipant(tournamentId, fullMatch.player1_id);
-                    const player2 = await this.getParticipant(tournamentId, fullMatch.player2_id);
-                    matches.push(challongeUtils.formatMatch(fullMatch, player1, player2));
+                    console.log(fullMatch, 'fullMatch');
+                    logger.debug(fullMatch.group_id, 'fullMatch.group_id');
+                    if(fullMatch.group_id) {
+                      matches.push(fullMatch);
+                    } else{
+                      console.log("XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+                      const player1 = await this.getParticipant(tournamentId, fullMatch.player1_id);
+                      const player2 = await this.getParticipant(tournamentId, fullMatch.player2_id);
+                      matches.push(challongeUtils.formatMatch(fullMatch, player1, player2));
+                    }
                 }
             }
             return (matches);
         }).catch(error => {
             logger.error(error);
-            reject(error);
         });
 
         return matches;
