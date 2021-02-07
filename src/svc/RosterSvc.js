@@ -72,7 +72,15 @@ class RosterSvc {
 
   async listRosters(projections = null) {
     let rosters = [];
-    await Roster.model.find({}, projections, (err, rostersList) => {
+    await Roster.model.find(
+      {}, 
+      projections, 
+      { 
+        sort: {
+          createdAt: -1
+        }
+      }, 
+      (err, rostersList) => {
       rosters = rostersList;
     });
     return rosters;
