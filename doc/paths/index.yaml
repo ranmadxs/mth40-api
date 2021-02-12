@@ -28,3 +28,5 @@
   $ref: ./challonge/tournament.yaml
 /army/list:
   $ref: ./army/list.yaml
+/favorite/save:
+  $ref: ./favorite/save.yaml  

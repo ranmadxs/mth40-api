@@ -6,6 +6,7 @@ const factionSvc = require('./FactionSvc');
 const unitSvc = require('./UnitSvc');
 const unitScoreSvc = require('./UnitScoreSvc');
 const rosterSvc = require('./RosterSvc');
+const tournamentSvc = require('./TournamentSvc');
 const rosterTournamentSvc = require('./RosterTournamentSvc');
 var MatchScore = require ('../schemas/MatchScoreSchema');
 
@@ -53,14 +54,14 @@ class MatchScoreSvc {
   async findFull (tournamentId, matchId) {
     let matchScore = await this.find(tournamentId, matchId);
     let players = [];
-
+    const tournament = await tournamentSvc.get(tournamentId);
     if(_.isEmpty(matchScore)) {
       logger.warn(`Se debe crear el matchScore para tournamentId=${tournamentId}, matchId=${matchId}`, 'findFull');
       await this.createFull({
         tournamentId: tournamentId,
         matchId: matchId,
       });
-      matchScore = await this.find(tournamentId, matchId);
+      matchScore = await this.find(tournamentId, matchId);      
     } else {
       for (let i = 0; i < matchScore.rosterTournaments.length; i++){
         const rosterTournament = matchScore.rosterTournaments[i];
@@ -77,6 +78,7 @@ class MatchScoreSvc {
         id: matchScore._id, 
         status: matchScore.status,
         tournamentId: matchScore.tournamentId,
+        tournament: tournament,
         matchId: matchScore.matchId
       }
     }
@@ -111,7 +113,9 @@ class MatchScoreSvc {
     matchFull.players = players;
     //logger.debug(matchScore, 'matchScore');
     if (matchFull && !_.isEmpty(matchFull.players) && matchFull.players.length >= 2) {
+      const matchName = matchFull.players[0].participant.name + ' VS ' + matchFull.players[1].participant.name;      
       matchFull = await this.calculateMVP(matchFull);
+      matchFull.matchScore.name = matchName;
     }
     return matchFull;
   }

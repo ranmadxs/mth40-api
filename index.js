@@ -21,7 +21,7 @@ var configController = require('./src/controller/ConfigController');
 var challongeController = require('./src/controller/ChallongeController');
 var tournamentController = require('./src/controller/TournamentController');
 var matchController = require('./src/controller/MatchController');
-
+var favoriteController = require('./src/controller/FavoriteController')
 /*** Factorias */
 var redisFactory = require('./src/factories/RedisFactory');
 var mongoFactory = require('./src/factories/MongoConnectionFactory');
@@ -58,7 +58,8 @@ app.use('/wahapedia', wahapediaController);
 app.use('/config', configController);
 app.use('/challonge', challongeController);
 app.use('/tournament', tournamentController);
-app.use('/match', matchController)
+app.use('/match', matchController);
+app.use('/favorite', favoriteController);
 
 app.listen(mth40.config.PORT, async () => {
     logger.debug("mth40-api starting on port="+mth40.config.PORT);

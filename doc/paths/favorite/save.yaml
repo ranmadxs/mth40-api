@@ -1,0 +1,24 @@
+post:
+    tags:
+        - favorite-api
+    summary: Guarda un favorite.
+    operationId: saveFavorite
+    description: |
+        Guarda un favorite considerando el name, description, info y url
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+          example:
+            {"name": "Ultramarines v/s Space Wolf", "description": "1) Ultramarines [Sergeant Telion] VS Space Wolf [Leman Russ]", "info": "OT500-V01",  "url": "http://localhost:5001/tournament/tmatch/7968317/187485167"}
+    responses:
+        '200':
+          description: Resultado Guardar
+          content:
+            application/json:
+              schema:
+                type: object
+                items: {}
+        '400':
+          description: Mala petición

@@ -12,3 +12,5 @@
   description: 'Warhammer 40K Information, Factions, Rules, Stratagems'
 - name: config-api
   description: 'Config wh40 api, like Redis and others'
+- name: favorite-api
+  description: 'Favorites WH40K'  

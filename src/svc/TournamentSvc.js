@@ -13,9 +13,9 @@ class TournamentSvc {
   }
 
   async get (id) {
-    let tournament = await tournament.model.find({
+    let tournament = await Tournament.model.find({
      'id': id,
-    });
+    }, {updateAt: 1, name: 1, completed_at: 1});
     return tournament && tournament.length > 0?tournament[0]:null;
   }
 

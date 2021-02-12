@@ -11,5 +11,5 @@ const model = mongoose.model('Favorite', favoriteSchema);
 
 module.exports = {
     model,
-    schema: gameSchema
+    schema: favoriteSchema
 }
