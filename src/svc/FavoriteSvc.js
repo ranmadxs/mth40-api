@@ -16,6 +16,11 @@ class FavoriteSvc {
     logger.debug(favoriteSchema, "[INIT_SAVE_FAVORITE]");
     await favoriteSchema.save(function (err) {if (err) logger.error (err, "Error Save Favorite")});
   }
+
+  async list() {
+    let favorites = await Favorite.model.find().sort({'_id': -1}).limit(4);
+    return favorites;
+  }
 };
 
 const instance = new FavoriteSvc();
