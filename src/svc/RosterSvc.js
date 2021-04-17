@@ -23,14 +23,16 @@ class RosterSvc {
 
   findUnits(faction) {
     // const factionUrl = this.wahapediaFactionUrl + "/" + faction.suggestion.army.faction.name.replace(/\s+/g, '-').toLowerCase();
-    const factionUrl = faction.suggestion.army.faction.url;
-    logger.debug(factionUrl, '[factionUrl]');
-    // old :: logger.debug(faction.suggestion.army.faction.url);
-    faction.units.forEach(unit => {
-      unit['suggestion'] = {
-        'url' : factionUrl + "/" + this.transformName(unit.name, "-")
-      }            
-    });
+    if( faction.suggestion && faction.suggestion.army ) {
+      const factionUrl = faction.suggestion.army.faction.url;
+      logger.debug(factionUrl, '[factionUrl]');
+      // old :: logger.debug(faction.suggestion.army.faction.url);
+      faction.units.forEach(unit => {
+        unit['suggestion'] = {
+          'url' : factionUrl + "/" + this.transformName(unit.name, "-")
+        }
+      });
+    }
     return faction;
   }
 
