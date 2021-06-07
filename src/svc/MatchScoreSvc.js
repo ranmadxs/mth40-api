@@ -27,22 +27,12 @@ class MatchScoreSvc {
      return matchScore && matchScore.length > 0?matchScore[0]:null;
   }
 
-  calculateUnitMVP (unit) {
-    logger.info(unit, 'unit');
-    logger.info(unit.offensive, 'unit.offensive');
-    const C = parseInt(unit.offensive.objetive);
-    const D = parseInt(unit.offensive.kill) - parseInt(unit.defensive.death);
-    const U = parseInt(unit.offensive.wound) + parseInt(unit.defensive.saving) - parseInt(unit.defensive.wound);
-    const mvpScore = C*50 + D*25 + U*10;
-    return mvpScore;
-  }
-
   async calculateMVP (matchFull) {
     matchFull.players.forEach(player => {
       let mvp = 0;
       let mvpScore  = null;
       player.units.forEach(unit => {
-        mvpScore = this.calculateUnitMVP(unit);
+        mvpScore = unitScoreSvc.calculateUnitMVP(unit);
         unit.mvp = {
           score: mvpScore,
         };

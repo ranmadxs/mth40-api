@@ -81,13 +81,25 @@ class UnitScoreSvc {
     }
   }
 
-  async saveOption(matchScoreOption) {
-    logger.debug(matchScoreOption, "[INIT_SAVE]");
+  calculateUnitMVP (unit) {
+    const C = parseInt(unit.offensive.objetive);
+    const D = parseInt(unit.offensive.kill) - parseInt(unit.defensive.death);
+    const U = parseInt(unit.offensive.wound) + parseInt(unit.defensive.saving) - parseInt(unit.defensive.wound);
+    const mvpScore = C*50 + D*25 + U*10;
+    return mvpScore;
+  }  
+
+  async saveScore(matchScoreOption) {
+    logger.debug(matchScoreOption, "[INIT_SAVE_SCORE]");
+    let currentScore =  await UnitScore.model.findById(matchScoreOption.id);
+    const score = this.calculateUnitMVP(currentScore);
     const setModel = {};
     setModel[`${matchScoreOption.type}`] = {};
     setModel[`${matchScoreOption.type}`][`${matchScoreOption.subType}`] = matchScoreOption.value;
     const objName = {};
     objName[`${matchScoreOption.type}.${matchScoreOption.subType}`] = matchScoreOption.value;
+    objName['updateAt'] = new Date;
+    objName['score'] = score;
     let responseSvc = null;
     await UnitScore.model.updateOne({ _id: matchScoreOption.id, },
       { $set: objName, $inc: { __v: 1 } })
@@ -96,7 +108,7 @@ class UnitScoreSvc {
       responseSvc = resp;
     }).catch((err) => {
       logger.error(err);
-      throw new Mth40Error(err.message, 424, 'UnitSvcError');      
+      throw new Mth40Error(err.message, 424, 'UnitSvcError');
     });
     return responseSvc;
   }

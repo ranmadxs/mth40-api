@@ -118,7 +118,23 @@ class FactionSvc {
     }});
   }
 
-  async find (factionName) {
+  scpecialFactions(factionName) {
+    let ret = factionName;
+    const spaceMarinesFaction = "Adeptus Astartes";
+    switch (factionName) {
+      case "Blood Angels": 
+      case "Space Wolves":
+      case "Dark Angels":
+        ret = spaceMarinesFaction;
+      break;
+      
+      default: ret = factionName
+    }
+   return ret;
+  }
+
+  async find (factionNameIn) {
+    const factionName = this.scpecialFactions(factionNameIn);
     logger.debug("find=" + factionName);
     const findCond = { "factions.name": factionName };
     const findFilter = { name: 1, factions: { $elemMatch: { name: {$eq :factionName} } } };

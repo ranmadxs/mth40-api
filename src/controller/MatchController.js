@@ -19,7 +19,7 @@ router.put('/calculateMVP', async (req, res) => {
       unit,
     } = req.body;
     //logger.debug(unit, 'unit');
-    result = await matchScoreSvc.calculateUnitMVP(req.body);
+    result = await unitScoreSvc.calculateUnitMVP(req.body);
   } catch(ex){
     logger.error(ex);
     return res.status(_.isEmpty(ex)?500:ex.code).json(_.isEmpty(ex)?{ error: ex.message }:ex);
@@ -45,7 +45,7 @@ router.put('/saveOption', async (req, res) => {
       logger.info(rosterUnitExtended, 'Saving alias');
       await unitSvc.saveAlias(rosterUnitExtended);
     } else if(type.toLowerCase() === 'offensive' || type.toLowerCase() === 'defensive'){    
-      result = await unitScoreSvc.saveOption(req.body);
+      result = await unitScoreSvc.saveScore(req.body);
     }
   } catch(ex){
     logger.error(ex);

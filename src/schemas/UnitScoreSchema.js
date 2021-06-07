@@ -23,7 +23,8 @@ const unitScoreSchema = new mongoose.Schema({
   defensive: defensiveSubschema,
   offensive: offensiveSubschema,
   createdAt: {type: Date, default: Date.now},
-  updateAt: {type: Date, default: Date.now}  
+  updateAt: {type: Date, default: Date.now},
+  score: {type: Number, default: 0},  
 });
 
 unitScoreSchema.index({ unitId: 1, matchScore: 1 }, { unique: true });

@@ -91,6 +91,7 @@ class UnitSvc {
         //logger.debug(force.suggestion, 'force.suggestion');
         const rosterArmy = force.suggestion.army;
         const armyFaction = await factionSvc.find(rosterArmy.faction.name);
+        logger.debug(armyFaction, 'armyFaction');
         const factionUnits = armyFaction.factions[0].units?armyFaction.factions[0].units:[];
         if(armyUnits && armyUnits.length > 0) {
           let isUp = false;
