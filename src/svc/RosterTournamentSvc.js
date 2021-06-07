@@ -18,6 +18,14 @@ class RosterTournamentSvc {
         return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
     }
 
+    async getRosterTournament (tournamentId, rosterId) {
+      let rosterTournament = await RosterTournament.model.find({
+          'tournament.id': parseInt(tournamentId),
+          'roster.id': rosterId,
+      });
+      return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
+  }
+
     async save (rtour) {
         rtour.updateAt = new Date();
         await RosterTournament.model.updateOne({ 

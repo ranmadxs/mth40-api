@@ -21,6 +21,7 @@ var configController = require('./src/controller/ConfigController');
 var challongeController = require('./src/controller/ChallongeController');
 var tournamentController = require('./src/controller/TournamentController');
 var matchController = require('./src/controller/MatchController');
+var scoreController = require('./src/controller/ScoreController');
 var favoriteController = require('./src/controller/FavoriteController')
 /*** Factorias */
 var redisFactory = require('./src/factories/RedisFactory');
@@ -59,6 +60,7 @@ app.use('/config', configController);
 app.use('/challonge', challongeController);
 app.use('/tournament', tournamentController);
 app.use('/match', matchController);
+app.use('/score', scoreController);
 app.use('/favorite', favoriteController);
 
 app.listen(mth40.config.PORT, async () => {
