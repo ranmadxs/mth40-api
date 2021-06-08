@@ -13,4 +13,6 @@
 - name: config-api
   description: 'Config wh40 api, like Redis and others'
 - name: favorite-api
-  description: 'Favorites WH40K'  
+  description: 'Favorites WH40K'
+- name: score-api
+  description: 'Scores'

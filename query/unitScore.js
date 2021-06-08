@@ -1,3 +1,9 @@
+db.unitscores.find({})
+   .projection({})
+   .sort({_id:-1})
+   .limit(100)
+   
+   
 db.unitscores.find({_id: ObjectId("5efc293513a54c6154798055")})
    .projection({})
    .sort({_id:-1})
@@ -53,8 +59,21 @@ db.unitscores.aggregate(
    ]
 )
 
+db.rosters.aggregate([
+  {"$unwind":"$forces"},
+  {"$unwind":"$forces.units"},  
+  {"$match":{"forces.units.id": {$in: ["1e59-13da-768f-21c3", "b15d-b24b-abf2-20c9"]}}},
+  { $project : { _id : 0, 
+    conferenceName : 1, 
+    mainFaction : 1, 
+    "rosterName": "$name", 
+    teamOwner : 1,
+    "name": "$forces.units.name",
+  }}
+ ])   
+
    
 db.rosters.aggregate([
   {"$unwind":"$forces"},
   {"$unwind":"$forces.units"},  
-  {"$match":{"forces.units.id": "1e59-13da-768f-21c3"}}])   
+  {"$match":{"forces.units.id": "1e59-13da-768f-21c3"}}])      

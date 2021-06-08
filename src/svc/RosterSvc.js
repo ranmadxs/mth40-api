@@ -15,6 +15,21 @@ class RosterSvc {
     return RosterSvc.instance;     
   }
 
+  async getRosterUnitById(listUnitId) {
+    const unitRoster = await Roster.model.aggregate([
+      {"$unwind":"$forces"},
+      {"$unwind":"$forces.units"},
+      {"$match":{"forces.units.id": {$in: listUnitId}}},
+      { $project : { _id : 0,
+        "name": "$forces.units.name",
+        conferenceName : 1,
+        mainFaction : 1,
+        "rosterName": "$name",
+        teamOwner : 1,        
+      }}
+    ]);
+    return unitRoster;
+  }
 
   transformName(name, key){
     const cleanName = name.replace(/\s/g, key);        

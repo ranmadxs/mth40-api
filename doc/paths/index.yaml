@@ -29,4 +29,6 @@
 /army/list:
   $ref: ./army/list.yaml
 /favorite/save:
-  $ref: ./favorite/save.yaml  
+  $ref: ./favorite/save.yaml
+/score/unitsByRoster/{tournamentId}/{rosterId}:
+  $ref: ./score/unitsByRoster.yaml

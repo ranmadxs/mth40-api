@@ -1,5 +1,6 @@
 var logger = require('../../LogConfig');
 var RosterTournament = require ('../schemas/RosterTournamentSchema');
+var mongoose = require ("mongoose");
 
 class RosterTournamentSvc {
     constructor() {
@@ -21,7 +22,7 @@ class RosterTournamentSvc {
     async getRosterTournament (tournamentId, rosterId) {
       let rosterTournament = await RosterTournament.model.find({
           'tournament.id': parseInt(tournamentId),
-          'roster.id': rosterId,
+          'roster.id': mongoose.Types.ObjectId(rosterId),
       });
       return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
   }

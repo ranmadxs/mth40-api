@@ -3,6 +3,8 @@ const logger = require('../../LogConfig');
 const Mth40Error = require  ('../utils/Mth40Error');
 const UnitScore = require ('../schemas/UnitScoreSchema');
 const unitSvc = require('./UnitSvc');
+const rosterSvc =  require('./RosterSvc');
+var mongoose = require ("mongoose");
 
 class UnitScoreSvc {
   constructor() {
@@ -11,6 +13,117 @@ class UnitScoreSvc {
       logger.debug("Unit Score SVC", "[SVC_INSTANCE]");
     }
     return UnitScoreSvc.instance;
+  }
+
+  async getScoresByRosterTournament(rosterTournamentId) {
+    let rosterTournamentScores = {};
+    let unitScoreList = [];
+
+    let scoreTotals = await UnitScore.model.aggregate([ 
+      {"$match":{"rosterTournament": mongoose.Types.ObjectId(rosterTournamentId)}},      
+      { 
+        $group: { 
+          _id: null, 
+          scoreTotal: { $sum: "$score" },
+          count: {$sum: 1},
+          offKillTotal: { $sum: "$offensive.kill" },
+          offWoundTotal: { $sum: "$offensive.wound" },
+          offObjetiveTotal: { $sum: "$offensive.objetive" },
+          defDeathTotal: { $sum: "$defensive.death" },
+          defWoundTotal: { $sum: "$defensive.wound" },
+          defSavingTotal: { $sum: "$defensive.saving" },
+        }
+      },
+      { $project :{
+        score: {
+          total: "$scoreTotal",
+          average: null,
+          offensive: {
+            kill: {total: "$offKillTotal", average: null},
+            wound: {total: "$offWoundTotal", average: null},
+            objetive: {total: "$offObjetiveTotal", average: null},
+          },
+          defensive: {
+            death: {total: "$defDeathTotal", average: null},
+            wound: {total: "$defWoundTotal", average: null},
+            saving: {total: "$defSavingTotal", average: null},
+          },
+          count: "$count"
+        }
+      }}      
+    ] );
+    scoreTotals = scoreTotals && scoreTotals.length > 0?scoreTotals[0]:null;    
+    await UnitScore.model.aggregate([
+      {"$match":{"rosterTournament": mongoose.Types.ObjectId(rosterTournamentId)}},
+      {
+         $group: {
+            _id: "$unitId",
+            scoreTotal: { $sum: "$score"},
+            scoreAvg: { $avg: "$score"},
+            offKillTotal: { $sum: "$offensive.kill" },
+            offKillAvg: { $avg: "$offensive.kill" },
+            offWoundTotal: { $sum: "$offensive.wound" },
+            offWoundAvg: { $avg: "$offensive.wound" },
+            offObjetiveTotal: { $sum: "$offensive.objetive" },
+            offObjetiveAvg: { $avg: "$offensive.objetive" },
+            defDeathTotal: { $sum: "$defensive.death" },
+            defDeathAvg: { $avg: "$defensive.death" },
+            defWoundTotal: { $sum: "$defensive.wound" },
+            defWoundAvg: { $avg: "$defensive.wound" },
+            defSavingTotal: { $sum: "$defensive.saving" },
+            defSavingAvg: { $avg: "$defensive.saving" },            
+            count: {$sum: 1}
+         },
+      },
+      {$sort:  {'scoreTotal': -1}},
+      { $project :{
+        score: {
+          total: "$scoreTotal", 
+          average: "$scoreAvg",
+          offensive: {
+            kill: {total: "$offKillTotal", average: "$offKillAvg"},
+            wound: {total: "$offWoundTotal", average: "$offWoundAvg"},
+            objetive: {total: "$offObjetiveTotal", average: "$offObjetiveAvg"},
+          },
+          defensive: {
+            death: {total: "$defDeathTotal", average: "$defDeathAvg"},
+            wound: {total: "$defWoundTotal", average: "$defWoundAvg"},
+            saving: {total: "$defSavingTotal", average: "$defSavingAvg"},
+          },
+          count: "$count"
+        }
+      }}
+    ]).then(async (unitScoreResp) => {
+      unitScoreList = unitScoreResp;
+      for (let index = 0; index < unitScoreList.length; index++) {
+        const unitScore = unitScoreList[index];
+        const rosterUnit = await rosterSvc.getRosterUnitById([unitScore._id]);
+        if(rosterUnit && rosterUnit.length > 0 ){
+          unitScoreList[index] = { ...rosterUnit[0], ...unitScore };
+        }
+      }
+      if ( unitScoreList && unitScoreList.length > 0) {
+        //const totalPartidos = scoreTotals.score.total;
+        const totalPartidos = scoreTotals.score.count;
+        const totalUnits = unitScoreList.length;
+        const totDiv = totalPartidos / totalUnits;
+        scoreTotals.score.average = scoreTotals.score.total / totDiv;
+        scoreTotals.score.offensive.kill.average = scoreTotals.score.offensive.kill.total / totDiv;
+        scoreTotals.score.offensive.wound.average = scoreTotals.score.offensive.wound.total / totDiv;
+        scoreTotals.score.offensive.objetive.average = scoreTotals.score.offensive.objetive.total / totDiv;
+        scoreTotals.score.defensive.death.average = scoreTotals.score.defensive.death.total / totDiv;
+        scoreTotals.score.defensive.wound.average = scoreTotals.score.defensive.wound.total / totDiv;
+        scoreTotals.score.defensive.saving.average = scoreTotals.score.defensive.saving.total / totDiv;
+        scoreTotals.score.count = totDiv;
+      }      
+    }).catch((err) => {
+      logger.error(err);
+      throw new Mth40Error(err.message, 424, 'UnitSvcError');      
+    });
+    rosterTournamentScores.score = scoreTotals;    
+    rosterTournamentScores.units = unitScoreList;
+    return rosterTournamentScores;
+
   }
 
   async listFull(rosterId, rosterTournamentId, matchScoreId) {
