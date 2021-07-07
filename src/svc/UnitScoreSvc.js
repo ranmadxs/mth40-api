@@ -202,6 +202,19 @@ class UnitScoreSvc {
     return mvpScore;
   }  
 
+  async updateAllScore () {
+    logger.debug("[UPDATE ALL SCORE]");
+    let unitScoreList =  await UnitScore.model.find();
+    unitScoreList.forEach(async unitScore => {
+      const score = this.calculateUnitMVP(unitScore);
+      const objName = {};
+      objName['updateAt'] = new Date;
+      objName['score'] = score;
+      await UnitScore.model.updateOne({ _id: unitScore._id, },
+        { $set: objName, $inc: { __v: 1 } });
+    });
+  }
+
   async saveScore(matchScoreOption) {
     logger.debug(matchScoreOption, "[INIT_SAVE_SCORE]");
     let currentScore =  await UnitScore.model.findById(matchScoreOption.id);

@@ -1,0 +1,18 @@
+get:
+    tags:
+        - score-api
+    summary: Actualiza tdos loss scores
+    operationId: updateAllScore
+    description: |
+        Actualiza todos los scores de UnitScore.
+
+    responses:
+        '200':
+          description: Resultado Lista Scores del RosterTournament
+          content:
+            application/json:
+              schema:
+                type: object
+                items: {}
+        '400':
+          description: Mala petición

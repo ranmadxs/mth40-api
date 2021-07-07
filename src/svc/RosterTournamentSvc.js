@@ -19,6 +19,14 @@ class RosterTournamentSvc {
         return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
     }
 
+
+  async getRosterTournamentByRosterId (rosterId) {
+    let rosterTournament = await RosterTournament.model.find({
+      'roster.id': mongoose.Types.ObjectId(rosterId),
+    });
+    return rosterTournament && rosterTournament.length > 0?rosterTournament[0]:null;
+  }
+
     async getRosterTournament (tournamentId, rosterId) {
       let rosterTournament = await RosterTournament.model.find({
           'tournament.id': parseInt(tournamentId),

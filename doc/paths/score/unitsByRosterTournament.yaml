@@ -2,10 +2,17 @@ get:
     tags:
         - score-api
     summary: Obtiene los scores por roster y torneo
-    operationId: unitsByRoster
+    operationId: unitsByRosterTournament
     description: |
         Obtiene los scores y atributos off, def por el roster en el torneo.
     parameters:
+        - name: tournamentId
+          in: path
+          description: Challonge Tournament Id
+          required: true
+          schema:
+            type: integer
+            default: 7968317
         - name: rosterId
           in: path
           description: Battlescribe Roster Id

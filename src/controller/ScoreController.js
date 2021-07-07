@@ -12,7 +12,42 @@ const Mth40Error = require  ('../utils/Mth40Error');
 
 logger.info("Score Controller", "[CTRL_INIT]");
 
-router.get('/unitsByRoster/:tournamentId/:rosterId', [
+router.get('/updateAllScore', [
+], async (req, res) => {
+  try{
+      result = await unitScoreSvc.updateAllScore();
+  } catch(ex){
+    logger.error(ex);
+    return res.status(_.isEmpty(ex)?500:ex.code).json(_.isEmpty(ex)?{ error: ex.message }:ex);
+  }
+  res.writeHead(200, {'Content-Type': 'application/json'});
+  res.end(JSON.stringify(result));
+});
+
+router.get('/unitsByRoster/:rosterId', [
+  check('rosterId').exists(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  const { params: {rosterId} } = req;
+  let result = null;
+  try{
+    const rosterTournament = await rosterTournamentSvc.getRosterTournamentByRosterId(rosterId);
+    if (rosterTournament && rosterTournament._id) {
+      result = await unitScoreSvc.getScoresByRosterTournament(rosterTournament._id);
+    }
+  } catch(ex){
+    logger.error(ex);
+    return res.status(_.isEmpty(ex)?500:ex.code).json(_.isEmpty(ex)?{ error: ex.message }:ex);
+  }
+  res.writeHead(200, {'Content-Type': 'application/json'});
+  res.end(JSON.stringify(result));
+});
+
+
+router.get('/unitsByRosterTournament/:tournamentId/:rosterId', [
   check('tournamentId').isNumeric(),
   check('rosterId').exists(),
 ], async (req, res) => {
