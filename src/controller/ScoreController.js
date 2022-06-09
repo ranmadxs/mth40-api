@@ -35,8 +35,8 @@ router.get('/unitsByRoster/:rosterId', [
   let result = null;
   try{
     const rosterTournament = await rosterTournamentSvc.getRosterTournamentByRosterId(rosterId);
-    if (rosterTournament && rosterTournament._id) {
-      result = await unitScoreSvc.getScoresByRosterTournament(rosterTournament._id);
+    if (rosterTournament && rosterTournament._id) {      
+      result = await unitScoreSvc.getScoresByRosterTournament(rosterTournament);
     }
   } catch(ex){
     logger.error(ex);
@@ -60,7 +60,7 @@ router.get('/unitsByRosterTournament/:tournamentId/:rosterId', [
   try{
     const rosterTournament = await rosterTournamentSvc.getRosterTournament(tournamentId, rosterId);
     if (rosterTournament && rosterTournament._id) {
-      result = await unitScoreSvc.getScoresByRosterTournament(rosterTournament._id);
+      result = await unitScoreSvc.getScoresByRosterTournament(rosterTournament);
     }
   } catch(ex){
     logger.error(ex);

@@ -16,6 +16,7 @@ try {
             REDIS_URL : process.env.REDIS_URL || mth40Properties.redis.url,
             MONGO_URL : process.env.MONGO_URL || mth40Properties.database.mongodb.url,
             REDIS_API_URL : process.env.REDIS_URL || null,
+            BASE_URL: process.env.BASE_URL || 'localhost',
         },
         properties: mth40Properties
     }

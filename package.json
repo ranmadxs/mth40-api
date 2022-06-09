@@ -1,6 +1,6 @@
 {
     "name": "wh40-api",
-    "version": "1.5.3",
+    "version": "1.5.4",
     "description": "API Universo WH40K",
     "keywords": [
         "node.js",
@@ -9,7 +9,9 @@
     ],
     "main": "index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "start-gendoc": "node swagger.js",
+        "dev": "nodemon --ignore swagger-output.json index.js"
     },
     "jest": {
         "testEnvironment": "node",
@@ -46,6 +48,7 @@
         "redis": "^3.0.2",
         "request": "^2.88.2",
         "request-promise": "^4.2.5",
+        "swagger-autogen": "^2.21.3",
         "swagger-ui-express": "4.1.4",
         "xml-js": "^1.6.11",
         "yamljs": "^0.3.0"

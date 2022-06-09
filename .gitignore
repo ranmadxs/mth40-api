@@ -5,6 +5,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+resources/swagger-output.json
+swagger-output.json
 
 .vscode/
 # Diagnostic reports (https://nodejs.org/api/report.html)

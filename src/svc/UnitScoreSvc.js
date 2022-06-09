@@ -15,9 +15,10 @@ class UnitScoreSvc {
     return UnitScoreSvc.instance;
   }
 
-  async getScoresByRosterTournament(rosterTournamentId) {
+  async getScoresByRosterTournament(rosterTournament) {
     let rosterTournamentScores = {};
     let unitScoreList = [];
+    const rosterTournamentId = rosterTournament._id;
 
     let scoreTotals = await UnitScore.model.aggregate([ 
       {"$match":{"rosterTournament": mongoose.Types.ObjectId(rosterTournamentId)}},      
@@ -76,7 +77,7 @@ class UnitScoreSvc {
          },
       },
       {$sort:  {'scoreTotal': -1}},
-      { $project :{
+      { $project :{        
         score: {
           total: "$scoreTotal", 
           average: "$scoreAvg",
@@ -97,6 +98,7 @@ class UnitScoreSvc {
       unitScoreList = unitScoreResp;
       for (let index = 0; index < unitScoreList.length; index++) {
         const unitScore = unitScoreList[index];
+        unitScore['id'] = unitScore._id;
         const rosterUnit = await rosterSvc.getRosterUnitById([unitScore._id]);
         if(rosterUnit && rosterUnit.length > 0 ){
           unitScoreList[index] = { ...rosterUnit[0], ...unitScore };
@@ -120,7 +122,8 @@ class UnitScoreSvc {
       logger.error(err);
       throw new Mth40Error(err.message, 424, 'UnitSvcError');      
     });
-    rosterTournamentScores.score = scoreTotals;    
+    rosterTournamentScores.roster = rosterTournament.roster;
+    rosterTournamentScores.resume = scoreTotals;
     rosterTournamentScores.units = unitScoreList;
     return rosterTournamentScores;
 
