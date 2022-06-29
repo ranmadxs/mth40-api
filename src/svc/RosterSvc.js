@@ -184,8 +184,13 @@ class RosterSvc {
             }
             tournamentName = submatch;
             teamOwner = arrayRoster[1].trim();
+        } else {
+          // Controla el factionMain, teamOwner cuando no es challonge          
+          let ownerData = this.findOwnerMainFaction(roster.forces);
+          logger.debug("Controla el factionMain, teamOwner cuando no es challonge", ownerData);
+          teamOwner = ownerData['teamOwner'];
+          factionMain = ownerData['mainFaction'];
         }
-
         const suggestions = await this.suggestionTournaments(tournamentName, conferenceName);
         roster['tournaments'] = {'suggestions': suggestions};
         roster.status = "VALID";
@@ -199,6 +204,23 @@ class RosterSvc {
             force = this.findUnits(force);
         });
         return roster;
+    }
+
+    findOwnerMainFaction(forces) {
+      let ownerData = {};
+      forces.forEach(force => {
+        for (let unit of force.units) {
+          const existsWarlod =  unit.selections.filter((selection) => (selection.name === "Warlord"));
+          if(existsWarlod && existsWarlod.length > 0){
+            logger.debug("XDDDDDDDDDDDDDDDDDDDDDDDDDDDDD Find Owner XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+            ownerData['teamOwner'] = unit.name;
+            ownerData['mainFaction'] = force.suggestion.army.faction.name;
+            break;
+          }          
+        };
+      });
+      return ownerData;
+
     }
 }
 
